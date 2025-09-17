@@ -54,6 +54,9 @@ app.get("/user-home", isAuthenticated, (req, res) => {
   res.render("user-home");
 });
 
+app.get("/manager-home", isManager, (req, res) => {
+  res.render("manager-home");
+});
 
 // Error Handling
 app.use(errorHandler);
