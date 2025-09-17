@@ -1,6 +1,7 @@
 // src/controllers/managerControllers.js
 import pool from "../db/dbConnection.js";
 
+
 // 🔹 Get all resolved tickets (Manager)
 export const getAllResolvedTickets = async (req, res, next) => {
   try {
@@ -22,6 +23,82 @@ export const getAllResolvedTickets = async (req, res, next) => {
     );
 
     res.status(200).json({ resolvedTickets });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+// 🔹 Get a single ticket by ID (Manager can see all tickets)
+export const getTicket = async (req, res, next) => {
+  try {
+    const ticketId = req.params.id;
+
+    const [rows] = await pool.query(
+      `SELECT 
+         t.id,
+         t.type,
+         t.organization,
+         t.phone_number,
+         t.short_description,
+         t.description,
+         t.status,
+         t.created_by,
+         t.assigned_to,
+         u.username AS created_by_username,
+         a.username AS assigned_to_username
+       FROM tickets t
+       LEFT JOIN users u ON t.created_by = u.id
+       LEFT JOIN users a ON t.assigned_to = a.id
+       WHERE t.id = ?`,
+      [ticketId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    res.status(200).json({ ticket: rows[0] });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+// 🔹 Get a single resolved ticket by ticket_id
+export const getResolvedTicket = async (req, res, next) => {
+  try {
+    const ticketId = req.params.id;
+
+    const [rows] = await pool.query(
+      `SELECT 
+         rt.id AS resolved_id,
+         rt.ticket_id,
+         rt.comment,
+         rt.resolved_at,
+         t.type,
+         t.organization,
+         t.phone_number,
+         t.short_description,
+         t.description,
+         t.status,
+         t.created_by,
+         t.assigned_to,
+         u.username AS created_by_username,
+         a.username AS assigned_to_username
+       FROM resolved_tickets rt
+       JOIN tickets t ON rt.ticket_id = t.id
+       LEFT JOIN users u ON t.created_by = u.id
+       LEFT JOIN users a ON t.assigned_to = a.id
+       WHERE rt.ticket_id = ?`,
+      [ticketId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Resolved ticket not found" });
+    }
+
+    res.status(200).json({ resolvedTicket: rows[0] });
   } catch (error) {
     console.error(error);
     next(error);

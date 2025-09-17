@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="/css/manager-home.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-section">
+            <i class="fas fa-tools logo-icon"></i>
+            <h2>Manager Panel</h2>
+        </div>
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-target="tickets-section">
+                <i class="fas fa-ticket-alt"></i> All Tickets
+            </a>
+            <a href="#" class="nav-item" data-target="resolved-section">
+                <i class="fas fa-check-circle"></i> Resolved Tickets
+            </a>
+            <a href="/logout" class="nav-item" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <section class="page-section" id="tickets-section">
+            <header class="main-header">
+                <h1 class="page-title">All Tickets</h1>
+                <div class="controls-group">
+                    <div class="search-wrapper">
+                        <input type="text" id="ticketsSearchInput" placeholder="Search tickets...">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Statuses</option>
+                        <option value="uncompleted">Uncompleted</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <select id="technicianFilter" class="filter-select">
+                        <option value="">All Technicians</option>
+                    </select>
+                    <button id="refreshBtn" class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </header>
+            <div class="card-section">
+                <div class="table-container">
+                    <table id="ticketsTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Short Description</th>
+                                <th>Status</th>
+                                <th>Created By</th>
+                                <th>Assigned To</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section hidden" id="resolved-section">
+            <header class="main-header">
+                <h1 class="page-title">Resolved Tickets</h1>
+                <div class="controls-group">
+                    <div class="search-wrapper">
+                        <input type="text" id="resolvedSearchInput" placeholder="Search resolved tickets...">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <button id="refreshResolvedBtn" class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </header>
+            <div class="card-section">
+                <div class="table-container">
+                    <table id="resolvedTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Short Description</th>
+                                <th>Resolved At</th>
+                                <th>Technician</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resolvedBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <div id="assignModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn assign-close-btn">&times;</span>
+                <h3 class="modal-title">Assign Ticket</h3>
+                <label for="technicianSelect">Select Technician:</label>
+                <select id="technicianSelect" class="modal-select"></select>
+                <button id="confirmAssignBtn" class="modal-btn">Assign</button>
+            </div>
+        </div>
+
+        <div id="viewModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn view-close-btn">&times;</span>
+                <h3 class="modal-title">Ticket Details</h3>
+                <div id="ticketDetailsContent" class="details-content">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/manager-home.js"></script>
+</body>
+</html>
