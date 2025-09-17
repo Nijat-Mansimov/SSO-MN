@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilet Sistemi</title>
+    <link rel="stylesheet" href="css/user-home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Bilet Sistemi</div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Əsas səhifə</a></li>
+                <li><a href="#" id="profileBtn"><i class="fas fa-user"></i> Hesabım</a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Çıxış</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!-- Create Ticket -->
+        <section class="create-ticket card">
+            <h2>Yeni Bilet Yarat</h2>
+            <form id="createTicketForm">
+                <div class="form-group">
+                    <label for="type">Bilet növü</label>
+                    <select id="type" name="type" required>
+                        <option value="Texniki">Texniki</option>
+                        <option value="Maliyyə">Maliyyə</option>
+                        <option value="Digər">Digər</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="organization">Təşkilat</label>
+                    <input type="text" id="organization" name="organization" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Telefon nömrəsi</label>
+                    <input type="text" id="phone_number" name="phone_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="short_description">Qısa təsvir</label>
+                    <input type="text" id="short_description" name="short_description" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Ətraflı təsvir</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Göndər</button>
+            </form>
+        </section>
+
+        <!-- Tickets -->
+        <section class="tickets card">
+            <h2>Mövcud Biletlər</h2>
+            <div class="filter-tabs">
+                <button class="tab-button active" data-status="all">Hamısı</button>
+                <button class="tab-button" data-status="uncompleted">Tamamlanmayıb</button>
+                <button class="tab-button" data-status="completed">Tamamlanıb</button>
+            </div>
+            <div id="ticketsContainer" class="tickets-container"></div>
+        </section>
+    </main>
+
+    <!-- Update Modal -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Yenilə</h2>
+            <form id="updateTicketForm">
+                <input type="hidden" id="updateTicketId">
+                <div class="form-group">
+                    <label for="update_type">Bilet növü</label>
+                    <select id="update_type" name="type" required>
+                        <option value="Texniki">Texniki</option>
+                        <option value="Maliyyə">Maliyyə</option>
+                        <option value="Digər">Digər</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="update_organization">Təşkilat</label>
+                    <input type="text" id="update_organization" name="organization" required>
+                </div>
+                <div class="form-group">
+                    <label for="update_short_description">Qısa təsvir</label>
+                    <input type="text" id="update_short_description" name="short_description" required>
+                </div>
+                <div class="form-group">
+                    <label for="update_description">Ətraflı təsvir</label>
+                    <textarea id="update_description" name="description" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-check"></i> Yenilə</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="profileCloseBtn">&times;</span>
+            <h2>Hesab Statistikaları</h2>
+            <div class="profile-stats">
+                <p>Ümumi Biletlər: <span id="totalTickets">0</span></p>
+                <p>Tamamlanmış: <span id="completedTickets">0</span></p>
+                <p>Tamamlanmamış: <span id="uncompletedTickets">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div id="customPopup" class="custom-popup">
+        <div class="popup-content">
+            <h3 id="popupTitle"></h3>
+            <p id="popupMessage"></p>
+            <button id="popupCloseBtn" class="btn">Tamam</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Bilet Sistemi</p>
+    </footer>
+
+    <script src="js/user-home.js"></script>
+</body>
+</html>
