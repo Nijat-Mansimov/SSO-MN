@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daxil ol - MEXP</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <script src="js/login.js" defer></script>
+</head>
+<body class="light-mode">
+    <div class="login-container">
+        <div class="theme-toggle-container">
+            <label class="switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="logo-group">
+            <img src="images/logo.png" alt="Main Logo" class="logo main-logo">
+            <img src="images/mn.png" alt="Secondary Logo" class="logo secondary-logo">
+        </div>
+        <div class="login-box">
+            <h2>Mərkəzləşdirilmiş Elektron Xidmətlər Portalına Xoş Gəlmisiniz!</h2>
+            <p>Hesaba daxil ol</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="options-group">
+                    <div class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <label for="rememberMe">Məni xatırla!</label>
+                    </div>
+                    <a href="#" class="forgot-password">Parolu unutmusan?</a>
+                </div>
+                <button type="submit" class="login-button">Daxil ol</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
