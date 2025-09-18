@@ -1,30 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Elements ---
+    // Elements
     const createForm = document.getElementById('createTicketForm');
     const ticketsContainer = document.getElementById('ticketsContainer');
     const filterTabs = document.querySelectorAll('.tab-button');
-    let currentFilter = 'all';
-
-    // Update Modal
+    const searchInput = document.getElementById('searchInput');
     const updateModal = document.getElementById('updateModal');
     const updateForm = document.getElementById('updateTicketForm');
     const updateTicketId = document.getElementById('updateTicketId');
-
-    // Profile Modal
     const profileBtn = document.getElementById('profileBtn');
     const profileModal = document.getElementById('profileModal');
     const totalTickets = document.getElementById('totalTickets');
     const completedTickets = document.getElementById('completedTickets');
     const uncompletedTickets = document.getElementById('uncompletedTickets');
-
-    // Popup
     const popup = document.getElementById('customPopup');
     const popupTitle = document.getElementById('popupTitle');
     const popupMessage = document.getElementById('popupMessage');
-
     const logoutBtn = document.getElementById('logoutBtn');
+    const ticketsSection = document.getElementById('ticketsSection');
+    const createSection = document.getElementById('createSection');
+    const ticketsBtn = document.getElementById('ticketsBtn');
+    const createBtn = document.getElementById('createBtn');
+    const darkModeToggle = document.getElementById('darkModeToggle');
 
-    // --- Helper Functions ---
+    let allTickets = [];
+    let currentFilter = 'all';
+
+    // Dark mode functionality
+    darkModeToggle.addEventListener('change', () => {
+        document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+    });
+
     const showPopup = (title, message) => {
         popupTitle.textContent = title;
         popupMessage.textContent = message;
@@ -35,56 +40,94 @@ document.addEventListener('DOMContentLoaded', () => {
         popup.style.display = 'none';
     });
 
+    // Navigation logic
+    const switchSection = (sectionToShow) => {
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        sectionToShow.classList.add('active');
+    };
+
+    const updateNavActiveState = (activeBtn) => {
+        document.querySelectorAll('.sidebar-nav a').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        activeBtn.classList.add('active');
+    };
+
+    ticketsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchSection(ticketsSection);
+        updateNavActiveState(ticketsBtn);
+        fetchTickets();
+    });
+
+    createBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchSection(createSection);
+        updateNavActiveState(createBtn);
+    });
+
     const fetchTickets = async () => {
         try {
             const res = await fetch('http://localhost:4000/api/users/tickets');
             if (!res.ok) throw new Error('Biletlər yüklənərkən xəta baş verdi.');
             const { tickets } = await res.json();
-            renderTickets(tickets, currentFilter);
+            allTickets = tickets;
+            renderTickets();
         } catch (err) {
             console.error(err);
             showPopup('Xəta!', err.message);
         }
     };
 
-    const renderTickets = (tickets, filter) => {
+    const renderTickets = () => {
         ticketsContainer.innerHTML = '';
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        const filtered = allTickets.filter(t => 
+            (currentFilter === 'all' || t.status === currentFilter) &&
+            (t.organization.toLowerCase().includes(searchTerm) ||
+             t.short_description.toLowerCase().includes(searchTerm) ||
+             t.id.toString().includes(searchTerm) ||
+             t.type.toLowerCase().includes(searchTerm))
+        );
 
-        const filtered = tickets.filter(t => filter === 'all' || t.status === filter);
         if (!filtered.length) {
-            ticketsContainer.innerHTML = '<p class="no-tickets-message">Bu statusda bilet yoxdur.</p>';
+            ticketsContainer.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">Nəticə tapılmadı.</td></tr>';
             return;
         }
 
         filtered.forEach(ticket => {
-            const card = document.createElement('div');
-            card.className = `ticket-card status-${ticket.status}`;
-            card.innerHTML = `
-                <h4>#${ticket.id} - ${ticket.type}</h4>
-                <p><strong>Təşkilat:</strong> ${ticket.organization}</p>
-                <p><strong>Qısa təsvir:</strong> ${ticket.short_description}</p>
-                <p><strong>Status:</strong> ${ticket.status === 'uncompleted' ? 'Tamamlanmayıb' : 'Tamamlanıb'}</p>
-                <div class="ticket-actions">
-                    <button class="btn btn-update" data-id="${ticket.id}"><i class="fas fa-edit"></i> Yenilə</button>
-                    <button class="btn btn-delete" data-id="${ticket.id}"><i class="fas fa-trash"></i> Sil</button>
-                </div>
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>#${ticket.id}</td>
+                <td>${ticket.type}</td>
+                <td>${ticket.organization}</td>
+                <td>${ticket.short_description}</td>
+                <td>${ticket.status === 'uncompleted' ? 'Tamamlanmayıb' : 'Tamamlanıb'}</td>
+                <td>
+                    <button class="btn btn-update" data-id="${ticket.id}"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-delete" data-id="${ticket.id}"><i class="fas fa-trash"></i></button>
+                </td>
             `;
-            ticketsContainer.appendChild(card);
+            ticketsContainer.appendChild(tr);
         });
 
         ticketsContainer.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', handleDelete));
         ticketsContainer.querySelectorAll('.btn-update').forEach(btn => btn.addEventListener('click', handleUpdate));
     };
 
-    // --- Event Handlers ---
     filterTabs.forEach(tab => {
         tab.addEventListener('click', e => {
             document.querySelector('.tab-button.active').classList.remove('active');
             e.currentTarget.classList.add('active');
             currentFilter = e.currentTarget.dataset.status;
-            fetchTickets();
+            renderTickets();
         });
     });
+
+    searchInput.addEventListener('input', renderTickets);
 
     createForm.addEventListener('submit', async e => {
         e.preventDefault();
@@ -110,7 +153,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const handleDelete = async e => {
         const id = e.currentTarget.dataset.id;
-        if (!confirm('Əminsiniz ki, bu bileti silmək istəyirsiniz?')) return;
+        const confirmDelete = await new Promise(resolve => {
+            const tempPopup = document.createElement('div');
+            tempPopup.classList.add('custom-popup');
+            tempPopup.innerHTML = `
+                <div class="popup-content">
+                    <h3>Təsdiq</h3>
+                    <p>Əminsiniz ki, bu bileti silmək istəyirsiniz?</p>
+                    <div class="popup-actions" style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="btn btn-primary" id="confirmDeleteBtn">Sil</button>
+                        <button class="btn btn-secondary" id="cancelDeleteBtn" style="background-color: #e2e8f0; color: var(--text-color);">Ləğv et</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(tempPopup);
+            tempPopup.style.display = 'flex';
+
+            document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+                document.body.removeChild(tempPopup);
+                resolve(true);
+            });
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+                document.body.removeChild(tempPopup);
+                resolve(false);
+            });
+        });
+
+        if (!confirmDelete) return;
+
         try {
             const res = await fetch(`http://localhost:4000/api/users/ticket/${id}`, { method: 'DELETE' });
             if (!res.ok) throw new Error('Bilet silinərkən xəta baş verdi.');
@@ -128,13 +198,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(`http://localhost:4000/api/users/tickets/${id}`);
             if (!res.ok) throw new Error('Bilet məlumatları tapılmadı.');
             const ticket = await res.json();
-
             updateTicketId.value = ticket.id;
             updateForm.update_type.value = ticket.type;
             updateForm.update_organization.value = ticket.organization;
             updateForm.update_short_description.value = ticket.short_description;
             updateForm.update_description.value = ticket.description;
-
             updateModal.style.display = 'flex';
         } catch (err) {
             console.error(err);
@@ -201,12 +269,10 @@ document.addEventListener('DOMContentLoaded', () => {
         profileModal.style.display = 'none';
     });
 
-    // Close modals when clicking outside
     window.addEventListener('click', e => {
         if (e.target === updateModal) updateModal.style.display = 'none';
         if (e.target === profileModal) profileModal.style.display = 'none';
     });
 
-    // Initial fetch
     fetchTickets();
 });

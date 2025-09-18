@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menecer Paneli</title>
-    <link rel="stylesheet" href="/css/manager-home.css">
+    <title>Texnik Paneli</title>
+    <link rel="stylesheet" href="/css/technician-home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -17,17 +17,18 @@
 
     <div class="wrapper">
         <aside class="sidebar">
-            <div class="sidebar-logo">Menecer Paneli</div>
+            <div class="sidebar-logo">Texnik Paneli</div>
             <ul class="sidebar-nav">
-                <li><a href="#" class="active" data-target="tickets-section" id="ticketsBtn"><i class="fas fa-list"></i> Bütün Biletlər</a></li>
-                <li><a href="#" data-target="resolved-section" id="resolvedBtn"><i class="fas fa-check-circle"></i> Həll edilmiş Biletlər</a></li>
+                <li><a href="#" class="active" data-target="tickets-section" id="ticketsBtn"><i class="fas fa-tools"></i> Mənim Tapşırıqlarım</a></li>
+                <li><a href="#" data-target="my-resolved-section" id="myResolvedBtn"><i class="fas fa-check-circle"></i> Həll edilmiş Biletlər</a></li>
+                <li><a href="#" data-target="all-resolved-section" id="allResolvedBtn"><i class="fas fa-users-cog"></i> Bütün Həll Edilənlər</a></li>
                 <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Çıxış</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <section class="card content-section active" id="tickets-section">
-                <h2>Bütün Biletlər</h2>
+                <h2>Mənim Tapşırıqlarım</h2>
                 <div class="filter-controls">
                     <div class="filter-tabs">
                         <button class="tab-button active" data-status="all">Hamısı</button>
@@ -40,9 +41,6 @@
                     </div>
                 </div>
                 <div class="filter-dropdowns">
-                    <div class="custom-select-container">
-                        <select id="technicianFilter" class="filter-select"></select>
-                    </div>
                     <button id="refreshTicketsBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Yenilə</button>
                 </div>
                 <div class="table-wrapper">
@@ -53,7 +51,6 @@
                                 <th>Qısa təsvir</th>
                                 <th>Status</th>
                                 <th>Yaradan</th>
-                                <th>Təyin olunub</th>
                                 <th>Əməliyyatlar</th>
                             </tr>
                         </thead>
@@ -62,51 +59,90 @@
                 </div>
             </section>
             
-            <section class="card content-section" id="resolved-section">
+            <section class="card content-section" id="my-resolved-section">
                 <h2>Həll edilmiş Biletlər</h2>
                 <div class="filter-controls">
                     <div class="search-box">
-                        <input type="text" id="resolvedSearchInput" placeholder="Axtar...">
+                        <input type="text" id="myResolvedSearchInput" placeholder="Axtar...">
                     </div>
-                    <button id="refreshResolvedBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Yenilə</button>
+                    <button id="refreshMyResolvedBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Yenilə</button>
                 </div>
                 <div class="table-wrapper">
-                    <table id="resolvedTable" class="tickets-table">
+                    <table id="myResolvedTable" class="tickets-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Qısa təsvir</th>
                                 <th>Həll vaxtı</th>
-                                <th>Texnik</th>
                                 <th>Əməliyyatlar</th>
                             </tr>
                         </thead>
-                        <tbody id="resolvedBody"></tbody>
+                        <tbody id="myResolvedBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card content-section" id="all-resolved-section">
+                <h2>Bütün Həll Edilmiş Biletlər</h2>
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <input type="text" id="allResolvedSearchInput" placeholder="Axtar...">
+                    </div>
+                    <button id="refreshAllResolvedBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Yenilə</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="allResolvedTable" class="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Qısa təsvir</th>
+                                <th>Həll edən</th>
+                                <th>Həll vaxtı</th>
+                                <th>Əməliyyatlar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allResolvedBody"></tbody>
                     </table>
                 </div>
             </section>
         </main>
     </div>
 
-    <div id="assignModal" class="modal">
+    <div id="statusModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2>Biletə Texnik Təyin Et</h2>
+            <h2>Tapşırığın Statusunu Dəyiş</h2>
             <div class="form-group">
-                <label for="technicianSelect">Texnik seçin:</label>
+                <label for="statusSelect">Yeni statusu seçin:</label>
                 <div class="custom-select-container">
-                    <select id="technicianSelect" required></select>
+                    <select id="statusSelect" required></select>
                 </div>
             </div>
-            <button id="confirmAssignBtn" class="btn btn-primary">Təyin et</button>
+            <div id="commentGroup" class="form-group" style="display: none;">
+                <label for="commentInput">Şərh:</label>
+                <textarea id="commentInput" placeholder="Biletin necə həll olunduğunu təsvir edin..."></textarea>
+            </div>
+            <button id="confirmStatusBtn" class="btn btn-primary">Yadda Saxla</button>
         </div>
     </div>
-
+    
     <div id="viewModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2>Biletin Detalları</h2>
             <div id="ticketDetailsContent" class="details-content"></div>
+        </div>
+    </div>
+
+    <div id="commentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Şərh Əlavə Et</h2>
+            <div class="form-group">
+                <label for="addCommentInput">Şərh:</label>
+                <textarea id="addCommentInput" placeholder="Şərhinizi daxil edin..."></textarea>
+            </div>
+            <button id="confirmCommentBtn" class="btn btn-primary">Göndər</button>
         </div>
     </div>
     
@@ -118,6 +154,6 @@
         </div>
     </div>
 
-    <script src="/js/manager-home.js"></script>
+    <script src="/js/technician-home.js"></script>
 </body>
 </html>

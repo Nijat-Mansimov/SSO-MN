@@ -1,54 +1,184 @@
+/* ===== Variables ===== */
+:root {
+  --bg-gradient: linear-gradient(135deg, #f0f4ff, #dbeafe);
+  --card-bg: #ffffff;
+  --text-color: #1e293b;
+  --muted-color: #6b7280;
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --input-border: #e2e8f0;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode {
+  --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+  --card-bg: #1e293b;
+  --text-color: #f1f5f9;
+  --muted-color: #94a3b8;
+  --input-border: #334155;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* ===== Global ===== */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: "Inter", sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-color);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+  transition: background 0.4s ease;
 }
 
-.login-container {
-  background-color: #fff;
-  padding: 40px 30px;
+/* ===== Wrapper & Card ===== */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-card {
+  background: var(--card-bg);
+  padding: 50px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px var(--shadow);
+  width: 400px;
+  text-align: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ===== Logo Section ===== */
+.logo-section {
+  margin-bottom: 30px;
+}
+
+.logo {
+  width: 70px;
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--muted-color);
+  margin-top: 6px;
+}
+
+/* ===== Form Elements ===== */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-color);
+}
+
+.input-group input,
+.btn-primary {
+  width: 100%;
+  padding: 14px 15px;
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  width: 350px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* Input Styles */
+.input-group input {
+  border: 1px solid var(--input-border);
+  background: var(--card-bg);
+  color: var(--text-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Button Styles */
+.btn-primary {
+  margin-top: 10px;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* ===== Error Message ===== */
+.error-message {
+  color: #ef4444;
+  margin-top: 15px;
+  font-size: 14px;
   text-align: center;
 }
 
-.login-container h1 {
-  margin-bottom: 20px;
-  color: #333;
+/* ===== Theme Toggle Switch ===== */
+.theme-toggle-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
-.login-container input {
-  width: 100%;
-  padding: 12px 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
 }
 
-.login-container button {
-  width: 100%;
-  padding: 12px;
-  background-color: #007BFF;
-  border: none;
-  color: white;
-  font-size: 16px;
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
   cursor: pointer;
-  border-radius: 5px;
-  margin-top: 10px;
+  inset: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
 }
 
-.login-container button:hover {
-  background-color: #0056b3;
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
-.login-container .error-message {
-  color: red;
-  margin-top: 10px;
-  font-size: 14px;
+input:checked + .slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
 }

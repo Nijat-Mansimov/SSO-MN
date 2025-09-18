@@ -58,6 +58,10 @@ app.get("/manager-home", isManager, (req, res) => {
   res.render("manager-home");
 });
 
+app.get("/technician-home", isTechnician, (req, res) => {
+  res.render("technician-home");
+});
+
 // Error Handling
 app.use(errorHandler);
 

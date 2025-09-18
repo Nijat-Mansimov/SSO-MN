@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Login - Ticketing App</title>
-  <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="/css/login.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
 </head>
 <body>
-  <div class="login-container">
-    <h1>Ticketing App</h1>
-    <form id="loginForm">
-      <input type="text" id="username" name="username" placeholder="Username" required>
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/register">Register</a></p>
-    <div id="errorMessage" class="error-message"></div>
+  <!-- Theme Toggle -->
+  <div class="theme-toggle-container">
+    <label class="switch">
+      <input type="checkbox" id="darkModeToggle" />
+      <span class="slider round"></span>
+    </label>
   </div>
+
+  <!-- Login Section -->
+  <div class="wrapper">
+    <div class="login-card">
+      <div class="logo-section">
+        <img src="/images/logo.png" alt="App Logo" class="logo" />
+        <h1>Ticketing App</h1>
+        <p class="subtitle">Sign in to access your dashboard</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn-primary">Login</button>
+
+        <p id="errorMessage" class="error-message"></p>
+      </form>
+    </div>
+  </div>
+
   <script src="/js/login.js" defer></script>
 </body>
 </html>
