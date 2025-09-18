@@ -8,42 +8,68 @@ let selectedTicketId = null;
 // DOM elements
 const ticketsSection = document.getElementById('tickets-section');
 const resolvedSection = document.getElementById('resolved-section');
-const navLinks = document.querySelectorAll('.nav-item');
+const navLinks = document.querySelectorAll('.sidebar-nav a');
 const logoutBtn = document.getElementById('logoutBtn');
 
 // All Tickets-related elements
 const ticketsSearchInput = document.getElementById('ticketsSearchInput');
-const statusFilter = document.getElementById('statusFilter');
+const ticketsFilterTabs = document.querySelectorAll('.filter-tabs .tab-button');
 const technicianFilter = document.getElementById('technicianFilter');
-const refreshTicketsBtn = document.getElementById('refreshBtn');
+const refreshTicketsBtn = document.getElementById('refreshTicketsBtn');
+const ticketsBody = document.getElementById("ticketsBody");
 
 // Resolved Tickets-related elements
 const resolvedSearchInput = document.getElementById('resolvedSearchInput');
 const refreshResolvedBtn = document.getElementById('refreshResolvedBtn');
+const resolvedBody = document.getElementById("resolvedBody");
 
 // Assign Modal elements
 const assignModal = document.getElementById('assignModal');
-const assignCloseBtn = document.querySelector('.assign-close-btn');
+const assignCloseBtn = assignModal.querySelector('.close-button');
 const technicianSelect = document.getElementById('technicianSelect');
 const confirmAssignBtn = document.getElementById('confirmAssignBtn');
 
 // View Modal elements
 const viewModal = document.getElementById('viewModal');
-const viewCloseBtn = document.querySelector('.view-close-btn');
+const viewCloseBtn = viewModal.querySelector('.close-button');
 const ticketDetailsContent = document.getElementById('ticketDetailsContent');
 
+// Popup elements
+const popup = document.getElementById('customPopup');
+const popupTitle = document.getElementById('popupTitle');
+const popupMessage = document.getElementById('popupMessage');
+const popupCloseBtn = document.getElementById('popupCloseBtn');
+
+// Theme toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+darkModeToggle.addEventListener('change', () => {
+    document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+});
+
+// Utility Functions
+const showPopup = (title, message) => {
+    popupTitle.textContent = title;
+    popupMessage.textContent = message;
+    popup.style.display = 'flex';
+};
+
+const hidePopup = () => {
+    popup.style.display = 'none';
+};
 
 // Function to handle navigation between sections
 function showSection(sectionId) {
-    document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.add('hidden');
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
     });
-    document.getElementById(sectionId).classList.remove('hidden');
+    document.getElementById(sectionId).classList.add('active');
+}
 
-    document.querySelectorAll('.nav-item').forEach(link => {
-        link.classList.remove('active');
+function updateNavActiveState(activeBtn) {
+    document.querySelectorAll('.sidebar-nav a').forEach(btn => {
+        btn.classList.remove('active');
     });
-    document.querySelector(`[data-target="${sectionId}"]`).classList.add('active');
+    activeBtn.classList.add('active');
 }
 
 async function fetchData() {
@@ -53,6 +79,10 @@ async function fetchData() {
             fetch(`${baseUrl}/tickets/resolved`),
             fetch(`${baseUrl}/technicians`)
         ]);
+
+        if (!ticketsRes.ok || !resolvedRes.ok || !techniciansRes.ok) {
+            throw new Error('Məlumatlar yüklənərkən xəta baş verdi.');
+        }
 
         const ticketsData = await ticketsRes.json();
         const resolvedData = await resolvedRes.json();
@@ -67,12 +97,12 @@ async function fetchData() {
         renderResolved();
     } catch (error) {
         console.error('Error fetching data:', error);
-        alert('Məlumatlar yüklənərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.');
+        showPopup('Xəta!', 'Məlumatlar yüklənərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.');
     }
 }
 
 function populateTechnicianFilters() {
-    technicianFilter.innerHTML = '<option value="">All Technicians</option>';
+    technicianFilter.innerHTML = '<option value="">Bütün Texniklər</option>';
     technicianSelect.innerHTML = '';
 
     allTechnicians.forEach(t => {
@@ -89,62 +119,79 @@ function populateTechnicianFilters() {
 }
 
 function renderTickets() {
-    const tbody = document.getElementById("ticketsBody");
     const search = ticketsSearchInput.value.toLowerCase();
-    const status = statusFilter.value;
+    const status = document.querySelector('.filter-tabs .tab-button.active').dataset.status;
     const technician = technicianFilter.value;
-    tbody.innerHTML = "";
+    ticketsBody.innerHTML = "";
 
     const filtered = allTickets.filter(t =>
+        (status === 'all' || t.status === status) &&
         (t.short_description.toLowerCase().includes(search) || t.description.toLowerCase().includes(search)) &&
-        (!status || t.status === status) &&
         (!technician || t.assigned_to == technician)
     );
+
+    if (filtered.length === 0) {
+        ticketsBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nəticə tapılmadı.</td></tr>';
+        return;
+    }
 
     filtered.forEach(t => {
         const row = document.createElement("tr");
         const isCompleted = t.status === 'completed';
         const assignBtnHtml = isCompleted
-            ? `<button class="assign-btn disabled" disabled>Assign</button>`
-            : `<button class="assign-btn" onclick="openAssignModal(${t.id})">Assign</button>`;
+            ? `<button class="btn assign-btn disabled" disabled>Təyin et</button>`
+            : `<button class="btn assign-btn" data-id="${t.id}">Təyin et</button>`;
 
         row.innerHTML = `
-            <td>${t.id}</td>
+            <td>#${t.id}</td>
             <td>${t.short_description}</td>
-            <td>${t.status}</td>
+            <td>${t.status === 'uncompleted' ? 'Tamamlanmayıb' : t.status === 'in_progress' ? 'İcra olunur' : 'Tamamlanıb'}</td>
             <td>${t.created_by_username}</td>
-            <td>${t.assigned_to_username || "Unassigned"}</td>
+            <td>${t.assigned_to_username || "Təyin edilməyib"}</td>
             <td>
-                <button class="view-btn" onclick="openViewModal(${t.id}, false)">View</button>
+                <button class="btn view-btn" data-id="${t.id}" data-resolved="false">Bax</button>
                 ${assignBtnHtml}
             </td>
         `;
-        tbody.appendChild(row);
+        ticketsBody.appendChild(row);
     });
+
+    ticketsBody.querySelectorAll('.assign-btn').forEach(btn => {
+        if (!btn.disabled) {
+            btn.addEventListener('click', () => openAssignModal(btn.dataset.id));
+        }
+    });
+    ticketsBody.querySelectorAll('.view-btn').forEach(btn => btn.addEventListener('click', () => openViewModal(btn.dataset.id, btn.dataset.resolved === 'true')));
 }
 
 function renderResolved() {
-    const tbody = document.getElementById("resolvedBody");
     const search = resolvedSearchInput.value.toLowerCase();
-    tbody.innerHTML = "";
+    resolvedBody.innerHTML = "";
 
     const filtered = allResolvedTickets.filter(t =>
         t.short_description.toLowerCase().includes(search)
     );
 
+    if (filtered.length === 0) {
+        resolvedBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nəticə tapılmadı.</td></tr>';
+        return;
+    }
+
     filtered.forEach(rt => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${rt.ticket_id}</td>
+            <td>#${rt.ticket_id}</td>
             <td>${rt.short_description}</td>
-            <td>${new Date(rt.resolved_at).toLocaleString()}</td>
+            <td>${new Date(rt.resolved_at).toLocaleString('az-AZ')}</td>
             <td>${rt.assigned_to_username || "N/A"}</td>
             <td>
-                <button class="view-btn" onclick="openViewModal(${rt.ticket_id}, true)">View</button>
+                <button class="btn view-btn" data-id="${rt.ticket_id}" data-resolved="true">Bax</button>
             </td>
         `;
-        tbody.appendChild(row);
+        resolvedBody.appendChild(row);
     });
+
+    resolvedBody.querySelectorAll('.view-btn').forEach(btn => btn.addEventListener('click', () => openViewModal(btn.dataset.id, btn.dataset.resolved === 'true')));
 }
 
 function openAssignModal(ticketId) {
@@ -155,38 +202,33 @@ function openAssignModal(ticketId) {
 async function openViewModal(ticketId, isResolved) {
     let ticketDetails;
     try {
-        const api = isResolved 
+        const api = isResolved
             ? `${baseUrl}/ticket/${ticketId}/resolved`
             : `${baseUrl}/tickets/${ticketId}`;
 
         const res = await fetch(api);
-        if (!res.ok) throw new Error('Failed to fetch ticket details');
-        
+        if (!res.ok) throw new Error('Bilet məlumatlarını gətirmək mümkün olmadı.');
+
         const data = await res.json();
-        
-        if (isResolved) {
-            ticketDetails = data.resolvedTicket;
-        } else {
-            ticketDetails = data.ticket;
-        }
-        
+        ticketDetails = isResolved ? data.resolvedTicket : data.ticket;
+
         let detailsHtml = `
-            <p><strong>ID:</strong> ${ticketDetails.id || ticketDetails.ticket_id}</p>
-            <p><strong>Type:</strong> ${ticketDetails.type}</p>
-            <p><strong>Organization:</strong> ${ticketDetails.organization}</p>
-            <p><strong>Phone:</strong> ${ticketDetails.phone_number}</p>
-            <p><strong>Status:</strong> ${ticketDetails.status}</p>
-            <p><strong>Created By:</strong> ${ticketDetails.created_by_username}</p>
-            <p><strong>Assigned To:</strong> ${ticketDetails.assigned_to_username || "Unassigned"}</p>
-            <p><strong>Short Description:</strong> ${ticketDetails.short_description}</p>
-            <p><strong>Description:</strong> ${ticketDetails.description}</p>
-            <p><strong>Created At:</strong> ${new Date(ticketDetails.created_at).toLocaleString()}</p>
+            <p><strong>ID:</strong> #${ticketDetails.id || ticketDetails.ticket_id}</p>
+            <p><strong>Növ:</strong> ${ticketDetails.type}</p>
+            <p><strong>Təşkilat:</strong> ${ticketDetails.organization}</p>
+            <p><strong>Telefon:</strong> ${ticketDetails.phone_number}</p>
+            <p><strong>Status:</strong> ${ticketDetails.status === 'uncompleted' ? 'Tamamlanmayıb' : ticketDetails.status === 'in_progress' ? 'İcra olunur' : 'Tamamlanıb'}</p>
+            <p><strong>Yaradan:</strong> ${ticketDetails.created_by_username}</p>
+            <p><strong>Təyin olunub:</strong> ${ticketDetails.assigned_to_username || "Təyin edilməyib"}</p>
+            <p><strong>Qısa təsvir:</strong> ${ticketDetails.short_description}</p>
+            <p><strong>Ətraflı təsvir:</strong> ${ticketDetails.description}</p>
+            <p><strong>Yaradılma tarixi:</strong> ${new Date(ticketDetails.created_at).toLocaleString('az-AZ')}</p>
         `;
 
         if (isResolved) {
             detailsHtml += `
-                <p><strong>Resolved At:</strong> ${new Date(ticketDetails.resolved_at).toLocaleString()}</p>
-                <p><strong>Comment:</strong> ${ticketDetails.comment || 'N/A'}</p>
+                <p><strong>Həll vaxtı:</strong> ${new Date(ticketDetails.resolved_at).toLocaleString('az-AZ')}</p>
+                <p><strong>Şərh:</strong> ${ticketDetails.comment || 'N/A'}</p>
             `;
         }
 
@@ -195,11 +237,40 @@ async function openViewModal(ticketId, isResolved) {
 
     } catch (error) {
         console.error('Error fetching ticket details:', error);
-        alert("Biletin məlumatlarını gətirərkən xəta baş verdi.");
+        showPopup('Xəta!', 'Biletin məlumatlarını gətirərkən xəta baş verdi.');
     }
 }
 
-// Event listeners for modals
+// Event listeners
+ticketsFilterTabs.forEach(tab => {
+    tab.addEventListener('click', e => {
+        document.querySelector('.filter-tabs .tab-button.active').classList.remove('active');
+        e.currentTarget.classList.add('active');
+        renderTickets();
+    });
+});
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        if (e.currentTarget.id !== 'logoutBtn') {
+            e.preventDefault();
+            const targetId = e.currentTarget.dataset.target;
+            if (targetId) {
+                showSection(targetId);
+                updateNavActiveState(e.currentTarget);
+                fetchData();
+            }
+        }
+    });
+});
+
+ticketsSearchInput.addEventListener("input", renderTickets);
+technicianFilter.addEventListener("change", renderTickets);
+refreshTicketsBtn.addEventListener("click", fetchData);
+
+resolvedSearchInput.addEventListener("input", renderResolved);
+refreshResolvedBtn.addEventListener("click", fetchData);
+
 assignCloseBtn.addEventListener("click", () => {
     assignModal.style.display = "none";
 });
@@ -208,19 +279,24 @@ viewCloseBtn.addEventListener("click", () => {
     viewModal.style.display = "none";
 });
 
+popupCloseBtn.addEventListener('click', hidePopup);
+
 window.onclick = function(event) {
-    if (event.target == assignModal) {
+    if (event.target === assignModal) {
         assignModal.style.display = "none";
     }
-    if (event.target == viewModal) {
+    if (event.target === viewModal) {
         viewModal.style.display = "none";
+    }
+    if (event.target === popup) {
+        hidePopup();
     }
 };
 
 confirmAssignBtn.addEventListener("click", async () => {
     const technicianId = technicianSelect.value;
     if (!technicianId) {
-        alert("Zəhmət olmasa, bir texnik seçin.");
+        showPopup('Xəta!', "Zəhmət olmasa, bir texnik seçin.");
         return;
     }
 
@@ -231,59 +307,33 @@ confirmAssignBtn.addEventListener("click", async () => {
             body: JSON.stringify({ technicianId })
         });
         
-        if (!res.ok) throw new Error('Failed to assign ticket');
-
         const data = await res.json();
-        alert(data.message);
+        if (!res.ok) {
+            throw new Error(data.message || 'Tapşırıq təyin edilərkən xəta baş verdi.');
+        }
+
+        showPopup('Uğurlu!', data.message);
         assignModal.style.display = "none";
         fetchData();
     } catch (error) {
         console.error('Error assigning ticket:', error);
-        alert("Tapşırıq təyin edilərkən xəta baş verdi.");
+        showPopup('Xəta!', error.message);
     }
 });
 
-// Function to handle logout
 logoutBtn.addEventListener('click', async (e) => {
     e.preventDefault();
     try {
-        const res = await fetch('/api/auth/logout', {
-            method: 'POST'
-        });
-
+        const res = await fetch('/api/auth/logout', { method: 'POST' });
         if (res.ok) {
             window.location.href = '/login';
         } else {
-            alert('Çıxış zamanı xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.');
+            throw new Error('Çıxış zamanı xəta baş verdi.');
         }
     } catch (error) {
         console.error('Logout error:', error);
-        alert('Şəbəkə xətası: Çıxış sorğusu göndərilə bilmədi.');
+        showPopup('Xəta!', 'Şəbəkə xətası: Çıxış sorğusu göndərilə bilmədi.');
     }
 });
 
-// Event listeners for navigation
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        // Prevent default behavior only for internal links, not logout
-        if (e.target.closest('.nav-item').id !== 'logoutBtn') {
-            e.preventDefault();
-            const targetId = e.target.closest('.nav-item').dataset.target;
-            if (targetId) {
-                showSection(targetId);
-            }
-        }
-    });
-});
-
-// Event listeners for filters and refresh buttons
-ticketsSearchInput.addEventListener("input", renderTickets);
-statusFilter.addEventListener("change", renderTickets);
-technicianFilter.addEventListener("change", renderTickets);
-refreshTicketsBtn.addEventListener("click", fetchData);
-
-resolvedSearchInput.addEventListener("input", renderResolved);
-refreshResolvedBtn.addEventListener("click", fetchData);
-
-// Initial data fetch
 fetchData();

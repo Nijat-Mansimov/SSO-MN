@@ -10,6 +10,7 @@
     --primary-hover: #0284c7;
     --success-color: #22c55e;
     --danger-color: #ef4444;
+    --in-progress-color: #f59e0b;
     --shadow: rgba(0,0,0,0.05);
     --radius: 8px;
     --transition: 0.2s ease-in-out;
@@ -34,7 +35,6 @@ body {
     transition: background-color var(--transition), color var(--transition);
 }
 
-/* Wrapper for sidebar + main content */
 .wrapper {
     display: flex;
     min-height: 100vh;
@@ -42,7 +42,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-    width: 200px;
+    width: 250px;
     background: var(--card-bg);
     padding: 2rem 1rem;
     display: flex;
@@ -90,13 +90,12 @@ body {
     color: #fff;
 }
 
-/* Main content */
+/* Main Content */
 .main-content {
     flex: 1;
     padding: 2rem;
 }
 
-/* Hide/Show sections */
 .content-section {
     display: none;
 }
@@ -105,7 +104,6 @@ body {
     display: block;
 }
 
-/* Cards */
 .card {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -122,18 +120,43 @@ h2 {
     transition: color var(--transition);
 }
 
-/* Forms */
-.form-group {
-    margin-bottom: 1.25rem;
+.filter-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
 }
 
-input, select, textarea {
+.tab-button {
+    background: var(--border-color);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--muted-color);
+    transition: var(--transition);
+}
+
+.tab-button.active {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 250px;
+}
+
+.search-box input {
     width: 100%;
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
@@ -145,19 +168,62 @@ input, select, textarea {
     box-sizing: border-box;
 }
 
-input:focus, select:focus, textarea:focus {
+.search-box input:focus {
     border-color: var(--primary-color);
     outline: none;
 }
 
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-    background-color: #1a202c;
-    color: #e2e8f0;
+.filter-dropdowns {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
 }
 
-/* Buttons */
+/* Custom Select Dropdown */
+.custom-select-container {
+    position: relative;
+    width: 200px;
+}
+
+.custom-select-container select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    padding-right: 2.5rem; /* Space for the arrow */
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    font-size: 1rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.custom-select-container::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-color);
+    pointer-events: none;
+    transition: var(--transition);
+}
+
+body.dark-mode .custom-select-container::after {
+    color: var(--muted-color);
+}
+
+.custom-select-container select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
 .btn {
     padding: 0.75rem 1.5rem;
     border: none;
@@ -181,32 +247,15 @@ body.dark-mode textarea {
     background: var(--primary-hover);
 }
 
-.btn-update, .btn-delete {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    border-radius: 50%;
+.btn-secondary {
+    background: var(--muted-color);
     color: #fff;
-    width: 35px;
-    height: 35px;
 }
 
-.btn-update {
-    background-color: #f59e0b;
+.btn-secondary:hover {
+    background: #4b5563;
 }
 
-.btn-delete {
-    background-color: var(--danger-color);
-}
-
-.btn-update:hover {
-    background-color: #d97706;
-}
-
-.btn-delete:hover {
-    background-color: #dc2626;
-}
-
-/* Table */
 .table-wrapper {
     max-height: 400px;
     overflow-y: auto;
@@ -254,77 +303,83 @@ body.dark-mode textarea {
     border-radius: 4px;
 }
 
-/* Filter and search controls */
-.filter-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.filter-tabs {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.tab-button {
-    background: var(--border-color);
-    border: none;
+.status-btn, .view-btn, .comment-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
     border-radius: var(--radius);
-    padding: 0.6rem 1rem;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--muted-color);
-    transition: var(--transition);
-}
-
-.tab-button.active {
-    background: var(--primary-color);
     color: #fff;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    margin-right: 0.5rem;
 }
 
-.search-box {
-    position: relative;
-    width: 100%;
-    max-width: 250px;
+.status-btn {
+    background-color: #f59e0b;
 }
 
-.search-box input {
-    width: 100%;
-    padding-left: 1rem;
+.status-btn:hover {
+    background-color: #d97706;
 }
 
-.search-box input:focus {
-    box-shadow: none;
+.status-btn.disabled {
+    background-color: var(--muted-color);
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-/* Modals and popup */
-.modal, .custom-popup {
+.view-btn {
+    background-color: #3b82f6;
+}
+
+.view-btn:hover {
+    background-color: #2563eb;
+}
+
+.comment-btn {
+    background-color: #f97316;
+}
+
+.comment-btn:hover {
+    background-color: #ea580c;
+}
+
+/* Modal */
+.modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(2px);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    animation: fadeInModal 0.3s ease-out;
 }
 
-.modal-content, .popup-content {
+.modal-content {
     background: var(--card-bg);
     padding: 2rem;
-    border-radius: var(--radius);
+    border-radius: 16px;
     width: 90%;
-    max-width: 450px;
-    box-shadow: 0 4px 15px var(--shadow);
-    animation: fadeIn 0.3s ease-out;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+    transition: background-color var(--transition);
+    transform: translateY(0);
+    animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .close-button {
@@ -338,6 +393,44 @@ body.dark-mode textarea {
 
 .close-button:hover {
     color: var(--text-color);
+}
+
+.details-content {
+    padding-top: 1rem;
+    line-height: 1.8;
+}
+
+.details-content p {
+    margin: 0.5rem 0;
+}
+
+.details-content strong {
+    color: var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--muted-color);
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: var(--transition);
+    box-sizing: border-box;
+    min-height: 100px;
+    resize: vertical;
 }
 
 /* Theme Toggle */
