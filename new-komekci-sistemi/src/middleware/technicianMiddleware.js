@@ -7,7 +7,7 @@ export const isTechnician = (req, res, next) => {
 
   // User mövcuddursa, rolunu yoxlayırıq
   if (req.user.role !== "technician") {
-    return res.status(403).json({ message: "Access denied: Technician and Manager only" });
+    return res.status(403).render('access-denied');
   }
 
   // Əgər managerdirsə, növbəti middleware-ə keç

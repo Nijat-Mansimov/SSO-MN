@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/css/admin-home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="theme-toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider round"></span>
+        </label>
+    </div>
+
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">Admin Paneli</div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="active" data-target="dashboard-section" id="dashboardBtn"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="#" data-target="users-section" id="usersBtn"><i class="fas fa-users"></i> İstifadəçilər</a></li>
+                <li><a href="#" data-target="technicians-section" id="techniciansBtn"><i class="fas fa-tools"></i> Texniklər</a></li>
+                <li><a href="#" data-target="tickets-section" id="ticketsBtn"><i class="fas fa-ticket-alt"></i> Ticketlər</a></li>
+                <li><a href="/user-home" id="goToUserHome"><i class="fas fa-user"></i> İstifadəçi Paneli</a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Çıxış</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <section class="card content-section active" id="dashboard-section">
+                <div class="dashboard-header">
+                    <h2>Dashboard</h2>
+                    <button id="exportStatsBtn" class="btn btn-primary"><i class="fas fa-file-excel"></i> Məlumatı İxrac Et</button>
+                </div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Ümumi Ticketlər</h3>
+                        <p id="totalTickets">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Həll Olunanlar</h3>
+                        <p id="resolvedTickets">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>İstifadəçilər</h3>
+                        <p id="totalUsers">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Texniklər</h3>
+                        <p id="totalTechnicians">0</p>
+                    </div>
+                </div>
+                <div class="charts">
+                    <div class="chart-card">
+                        <h3>Status üzrə</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Tip üzrə</h3>
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>İstifadəçi üzrə</h3>
+                        <canvas id="userChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Texnik üzrə</h3>
+                        <canvas id="technicianChart"></canvas>
+                    </div>
+                </div>
+                <div class="resolved">
+                    <h2>Son həll olunan ticketlər</h2>
+                    <div class="table-wrapper">
+                        <table class="tickets-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Qısa Təsvir</th>
+                                    <th>Status</th>
+                                    <th>Yaradan</th>
+                                    <th>Texnik</th>
+                                    <th>Şərh</th>
+                                    <th>Tarix</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resolvedTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="card content-section" id="users-section">
+                <h2>İstifadəçilər</h2>
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <input type="text" id="usersSearchInput" placeholder="Axtar...">
+                    </div>
+                    <button id="refreshUsersBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Yenilə</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>İstifadəçi Adı</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card content-section" id="technicians-section">
+                <h2>Texniklər</h2>
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <input type="text" id="techniciansSearchInput" placeholder="Axtar...">
+                    </div>
+                    <button id="refreshTechniciansBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Yenilə</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>İstifadəçi Adı</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Həll edilmiş ticket sayı</th>
+                            </tr>
+                        </thead>
+                        <tbody id="techniciansBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card content-section" id="tickets-section">
+                <h2>Ticketlər</h2>
+                <div class="filter-controls">
+                    <div class="filter-tabs">
+                        <button class="tab-button active" data-status="all">Hamısı</button>
+                        <button class="tab-button" data-status="uncompleted">Tamamlanmayıb</button>
+                        <button class="tab-button" data-status="in_progress">İcra olunur</button>
+                        <button class="tab-button" data-status="completed">Tamamlanıb</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="ticketsSearchInput" placeholder="Axtar...">
+                    </div>
+                </div>
+                <div class="filter-dropdowns">
+                    <button id="refreshTicketsBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Yenilə</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Qısa təsvir</th>
+                                <th>Status</th>
+                                <th>Yaradan</th>
+                                <th>Təyin olunan</th>
+                                <th>Əməliyyatlar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketsBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Biletin Detalları</h2>
+            <div id="ticketDetailsContent" class="details-content"></div>
+        </div>
+    </div>
+    
+    <div id="customPopup" class="custom-popup">
+        <div class="popup-content">
+            <h3 id="popupTitle"></h3>
+            <p id="popupMessage"></p>
+            <button id="popupCloseBtn" class="btn btn-primary">Tamam</button>
+        </div>
+    </div>
+
+    <script src="/js/admin-home.js"></script>
+</body>
+</html>

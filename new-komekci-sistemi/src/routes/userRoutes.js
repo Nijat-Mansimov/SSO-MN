@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/create', isAuthenticated, createTicket);
 router.get("/tickets/:id", isAuthenticated, getTicket)
 router.get("/tickets", isAuthenticated, getTickets)
-router.delete("/ticket/:id", isAuthenticated, deleteTicket)
+// router.delete("/ticket/:id", isAuthenticated, deleteTicket)
 router.put("/ticket/:id", isAuthenticated, updateTicket)
 
 export { router }; // named export

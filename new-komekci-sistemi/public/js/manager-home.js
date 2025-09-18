@@ -39,6 +39,7 @@ const popup = document.getElementById('customPopup');
 const popupTitle = document.getElementById('popupTitle');
 const popupMessage = document.getElementById('popupMessage');
 const popupCloseBtn = document.getElementById('popupCloseBtn');
+const goToUserHome = document.getElementById("goToUserHome")
 
 // Theme toggle
 const darkModeToggle = document.getElementById('darkModeToggle');
@@ -334,6 +335,12 @@ logoutBtn.addEventListener('click', async (e) => {
         console.error('Logout error:', error);
         showPopup('Xəta!', 'Şəbəkə xətası: Çıxış sorğusu göndərilə bilmədi.');
     }
+});
+
+goToUserHome.addEventListener('click', async (e) => {
+    e.preventDefault();
+    window.location.href = '/user-home';
+
 });
 
 fetchData();
