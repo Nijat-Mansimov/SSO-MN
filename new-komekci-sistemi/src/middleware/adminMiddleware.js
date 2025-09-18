@@ -1,5 +1,5 @@
 // Manager yoxlama middleware
-export const isManager = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
   // Passport session vasitəsilə user mövcudluğunu yoxlayırıq
   if (!req.isAuthenticated || !req.isAuthenticated()) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -7,7 +7,7 @@ export const isManager = (req, res, next) => {
 
   // User mövcuddursa, rolunu yoxlayırıq
   if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Access denied: Manager or Admin only" });
+    return res.status(403).render('access-denied');
   }
 
   // Əgər managerdirsə, növbəti middleware-ə keç

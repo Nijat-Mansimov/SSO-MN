@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
           case "user":
             window.location.href = "/user-home";
             break;
+          case "admin":
+            window.location.href = "/admin-home";
+            break;
           case "manager":
             window.location.href = "/manager-home";
             break;

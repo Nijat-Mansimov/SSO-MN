@@ -11,9 +11,11 @@ import { router as authRoutes } from "./src/routes/authRoutes.js";
 import { router as userRoutes } from "./src/routes/userRoutes.js";
 import {router as managerRoutes} from "./src/routes/managerRoutes.js"
 import {router as technicianRoutes} from "./src/routes/technicianRoutes.js"
+import {router as adminRoutes} from "./src/routes/adminRoutes.js"
 import { isAuthenticated } from "./src/middleware/authMiddleware.js";
 import { isManager } from "./src/middleware/managerMiddleware.js";
 import { isTechnician } from "./src/middleware/technicianMiddleware.js";
+import { isAdmin } from "./src/middleware/adminMiddleware.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -44,6 +46,7 @@ app.use("/api/auth/", authRoutes)
 app.use("/api/users/", userRoutes)
 app.use("/api/managers/", managerRoutes)
 app.use("/api/technicians/", technicianRoutes)
+app.use("/api/admins", adminRoutes)
 
 // Login and Register (public)
 app.get("/login", (req, res) => {
@@ -60,6 +63,10 @@ app.get("/manager-home", isManager, (req, res) => {
 
 app.get("/technician-home", isTechnician, (req, res) => {
   res.render("technician-home");
+});
+
+app.get("/admin-home", isAdmin, (req, res) => {
+  res.render("admin-home");
 });
 
 // Error Handling

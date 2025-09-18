@@ -7,7 +7,7 @@ export const isManager = (req, res, next) => {
 
   // User mövcuddursa, rolunu yoxlayırıq
   if (req.user.role !== "manager") {
-    return res.status(403).json({ message: "Access denied: Manager only" });
+    return res.status(403).render('access-denied');
   }
 
   // Əgər managerdirsə, növbəti middleware-ə keç

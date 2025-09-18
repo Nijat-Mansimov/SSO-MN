@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${ticket.status === 'uncompleted' ? 'Tamamlanmayıb' : 'Tamamlanıb'}</td>
                 <td>
                     <button class="btn btn-update" data-id="${ticket.id}"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-delete" data-id="${ticket.id}"><i class="fas fa-trash"></i></button>
                 </td>
             `;
             ticketsContainer.appendChild(tr);
