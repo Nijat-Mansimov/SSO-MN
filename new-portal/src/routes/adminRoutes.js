@@ -1,19 +1,25 @@
 import express from "express";
 import { isAdmin } from "../middleware/adminMiddleware.js";
-import { getUsers, createUser, deleteUser, updateUser  } from "../controllers/adminControllers.js";
+import { getUsers, createUser, deleteUser, getUserServices, updateUser, getAllServices, createService, updateService, deleteService, assignServiceToUser, removeServiceFromUser  } from "../controllers/adminControllers.js";
 
 const router = express.Router();
 
-// Get all users (admin-only)
-router.get("/users", isAdmin, getUsers);
+// ======================= USERS =======================
+router.get("/users", getUsers);
+router.post("/users", createUser);
+router.put("/users/:id", updateUser);
+router.delete("/users/:id", deleteUser);
 
-// Create user (admin-only)
-router.post("/users", isAdmin, createUser);
+// ======================= SERVICES =======================
+router.get("/services", getAllServices);
+router.post("/services", createService);
+router.put("/services/:id", updateService);
+router.delete("/services/:id", deleteService);
 
-// Delete user (admin-only)
-router.delete("/users/:id", isAdmin, deleteUser);
-
-// Update user (admin-only)
-router.put("/users/:id", isAdmin, updateUser);
+// ======================= USER_SERVICES =======================
+router.post("/user-services/assign", assignServiceToUser
+);
+router.post("/user-services/remove", removeServiceFromUser);
+router.get("/user-services", getUserServices);
 
 export { router };

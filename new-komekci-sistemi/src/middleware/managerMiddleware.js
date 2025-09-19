@@ -1,15 +1,17 @@
 // Manager yoxlama middleware
 export const isManager = (req, res, next) => {
-  // Passport session vasitəsilə user mövcudluğunu yoxlayırıq
-  if (!req.isAuthenticated || !req.isAuthenticated()) {
+  const user = (req.user) ? req.user : req.session.user;
+
+  // İstifadəçi yoxdursa, 401 qaytar
+  if (!user) {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
-  // User mövcuddursa, rolunu yoxlayırıq
-  if (req.user.role !== "manager") {
+  // İstifadəçi varsa, rolunu yoxla
+  if (user.role !== "manager") {
     return res.status(403).render('access-denied');
   }
 
-  // Əgər managerdirsə, növbəti middleware-ə keç
+  // Managerdirsə, növbəti middleware-ə keç
   next();
 };

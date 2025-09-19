@@ -3,7 +3,15 @@ import pool from "../db/dbConnection.js";
 // 🔹 Add comment to already resolved ticket (technician)
 export const addResolvedComment = async (req, res, next) => {
   try {
-    const technicianId = req.user.id;
+    let technicianId;
+
+    if (req.user) {
+      technicianId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      technicianId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
     const ticketId = req.params.id;
     const { comment } = req.body;
 
@@ -64,7 +72,15 @@ export const getAllResolvedTickets = async (req, res, next) => {
 // 🔹 Get resolved tickets for the logged-in technician
 export const getResolvedTickets = async (req, res, next) => {
   try {
-    const technicianId = req.user.id;
+    let technicianId;
+
+    if (req.user) {
+      technicianId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      technicianId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
     const [resolvedTickets] = await pool.query(
       `SELECT 
@@ -95,7 +111,15 @@ export const getResolvedTickets = async (req, res, next) => {
 export const updateTicketStatus = async (req, res, next) => {
   try {
     const ticketId = req.params.id;
-    const technicianId = req.user.id;
+    let technicianId;
+
+    if (req.user) {
+      technicianId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      technicianId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
     const { status, comment } = req.body;
 
     const [rows] = await pool.query(
@@ -143,7 +167,15 @@ export const updateTicketStatus = async (req, res, next) => {
 // 🔹 Get tickets assigned to the logged-in technician
 export const getTickets = async (req, res, next) => {
   try {
-    const technicianId = req.user.id;
+    let technicianId;
+
+    if (req.user) {
+      technicianId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      technicianId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
     const [tickets] = await pool.query(
       `SELECT

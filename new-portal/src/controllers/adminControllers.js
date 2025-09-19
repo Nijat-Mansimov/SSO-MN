@@ -1,10 +1,14 @@
 import pool from "../db/dbConnection.js";
 import bcrypt from "bcrypt";
 
-// Get all users (for admin)
+// ======================= USERS =======================
+
+// Get all users (admin)
 export const getUsers = async (req, res) => {
   try {
-    const [users] = await pool.query("SELECT id, username, email, isAdmin FROM users");
+    const [users] = await pool.query(
+      "SELECT id, username, email, isAdmin, created_at FROM users"
+    );
     res.json(users);
   } catch (err) {
     console.error(err);
@@ -12,10 +16,11 @@ export const getUsers = async (req, res) => {
   }
 };
 
-// Create user (admin-only)
+// Create user (admin)
 export const createUser = async (req, res) => {
   const { username, password, email, isAdmin } = req.body;
-  if (!username || !password || !email) return res.status(400).json({ error: "Missing fields" });
+  if (!username || !password || !email) 
+    return res.status(400).json({ error: "Missing fields" });
 
   try {
     const [existing] = await pool.query("SELECT * FROM users WHERE username = ?", [username]);
@@ -24,8 +29,9 @@ export const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     await pool.query(
       "INSERT INTO users (username, password, email, isAdmin) VALUES (?, ?, ?, ?)",
-      [username, hashedPassword, email, isAdmin || false]
+      [username, hashedPassword, email, isAdmin || 0]
     );
+
     res.json({ message: "User created successfully" });
   } catch (err) {
     console.error(err);
@@ -33,20 +39,7 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Delete user (admin-only)
-export const deleteUser = async (req, res) => {
-  const userId = req.params.id;
-  try {
-    await pool.query("DELETE FROM users WHERE id = ?", [userId]);
-    res.json({ message: "User deleted successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database error" });
-  }
-};
-
-
-// Update a user (admin-only)
+// Update user (admin)
 export const updateUser = async (req, res) => {
   const userId = req.params.id;
   const { username, email, password, isAdmin } = req.body;
@@ -80,16 +73,213 @@ export const updateUser = async (req, res) => {
       values.push(isAdmin);
     }
 
-    if (fields.length === 0) {
-      return res.status(400).json({ error: "No valid fields to update" });
-    }
-
     values.push(userId); // For WHERE clause
-
     const sql = `UPDATE users SET ${fields.join(", ")} WHERE id = ?`;
     await pool.query(sql, values);
 
     res.json({ message: "User updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+// Delete user (admin)
+export const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    await pool.query("DELETE FROM users WHERE id = ?", [userId]);
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+// ======================= SERVICES =======================
+
+// Get all services
+export const getAllServices = async (req, res) => {
+  try {
+    const [services] = await pool.query(
+      "SELECT id, service_name, name, url, description, created_at FROM services"
+    );
+    res.json(services);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+// Create a new service
+export const createService = async (req, res) => {
+  const { service_name, name, url, description } = req.body;
+  
+  if (!service_name || !name || !url) {
+    return res.status(400).json({ error: "Service name, name, and URL required" });
+  }
+
+  try {
+    const [existing] = await pool.query(
+      "SELECT * FROM services WHERE service_name = ?",
+      [service_name]
+    );
+    if (existing.length > 0) {
+      return res.status(400).json({ error: "Service already exists" });
+    }
+
+    await pool.query(
+      "INSERT INTO services (service_name, name, url, description) VALUES (?, ?, ?, ?)",
+      [service_name, name, url, description || null]
+    );
+
+    res.json({ message: "Service created successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+// Update a service
+export const updateService = async (req, res) => {
+  const serviceId = req.params.id;
+  const { service_name, name, url, description } = req.body;
+
+  if (!service_name && !name && !url && !description) {
+    return res.status(400).json({ error: "Nothing to update" });
+  }
+
+  try {
+    const fields = [];
+    const values = [];
+
+    if (service_name) {
+      fields.push("service_name = ?");
+      values.push(service_name);
+    }
+    
+    if (name) {
+      fields.push("name = ?");
+      values.push(name);
+    }
+    
+    if (url) {
+      fields.push("url = ?");
+      values.push(url);
+    }
+
+    if (description) {
+      fields.push("description = ?");
+      values.push(description);
+    }
+
+    values.push(serviceId); // For WHERE clause
+    const sql = `UPDATE services SET ${fields.join(", ")} WHERE id = ?`;
+    await pool.query(sql, values);
+
+    res.json({ message: "Service updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+// Delete a service
+export const deleteService = async (req, res) => {
+  const serviceId = req.params.id;
+  try {
+    await pool.query("DELETE FROM services WHERE id = ?", [serviceId]);
+    res.json({ message: "Service deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+// ======================= USER_SERVICES =======================
+
+// Assign multiple services to a user
+export const assignServiceToUser = async (req, res) => {
+  const { userId, serviceIds } = req.body; // serviceIds array olacaq
+  if (!userId || !Array.isArray(serviceIds) || serviceIds.length === 0) {
+    return res.status(400).json({ error: "userId və ən azı bir serviceId tələb olunur" });
+  }
+
+  try {
+    // Mövcud təyinatları yoxla
+    const [existing] = await pool.query(
+      "SELECT service_id FROM user_services WHERE user_id = ?",
+      [userId]
+    );
+    const existingIds = existing.map(row => row.service_id);
+
+    // Yalnız yeni xidmətləri əlavə etmək üçün filtrlə
+    const newServiceIds = serviceIds.filter(serviceId => !existingIds.includes(serviceId));
+    
+    // Əgər əlavə ediləcək yeni xidmət yoxdursa, xəta qaytar
+    if (newServiceIds.length === 0) {
+      return res.status(400).json({ error: "Bütün seçilmiş xidmətlər artıq təyin olunub" });
+    }
+
+    // `mysql2` bulk insert üçün dəyərlər array-ini düzəlt
+    const valuesToInsert = newServiceIds.map(serviceId => [userId, serviceId]);
+
+    // Bulk insert əməliyyatını həyata keçir
+    const [result] = await pool.query(
+      "INSERT INTO user_services (user_id, service_id) VALUES ?",
+      [valuesToInsert]
+    );
+
+    res.json({ 
+      message: `${result.affectedRows} xidmət uğurla təyin olundu.`, 
+      added: result.affectedRows 
+    });
+
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+
+// Remove service from a user
+export const removeServiceFromUser = async (req, res) => {
+  const { userId, serviceId } = req.body;
+  if (!userId || !serviceId) return res.status(400).json({ error: "userId and serviceId required" });
+
+  try {
+    await pool.query(
+      "DELETE FROM user_services WHERE user_id = ? AND service_id = ?",
+      [userId, serviceId]
+    );
+
+    res.json({ message: "Service removed from user successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
+
+
+// Bütün istifadəçi-xidmət əlaqələrini gətir
+export const getUserServices = async (req, res) => {
+  try {
+    const [userServices] = await pool.query(
+      `SELECT
+         us.user_id,
+         u.username,
+         us.service_id,
+         s.service_name
+       FROM
+         user_services us
+       JOIN
+         users u ON us.user_id = u.id
+       JOIN
+         services s ON us.service_id = s.id
+       ORDER BY
+         us.user_id, us.service_id`
+    );
+    res.json(userServices);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

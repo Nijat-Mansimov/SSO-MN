@@ -1,146 +1,89 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistemlər</title>
-  <link rel="stylesheet" href="/css/home.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemlər</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
 <header class="header">
-  <div class="container">
-    <h1 class="logo"><i class="fas fa-layer-group"></i> Sistemlər</h1>
-    <div class="controls">
-      <div class="search-wrapper">
-        <input type="text" id="searchInput" placeholder="Axtar...">
-        <i class="fas fa-search search-icon"></i>
-      </div>
-      <select id="filterSelect">
-        <option value="all">Hamısı</option>
-        <option value="active">Aktiv</option>
-        <option value="inactive">Deaktiv</option>
-      </select>
-      <button id="modeToggle" class="mode-toggle">
-        <i class="fas fa-moon"></i>
-      </button>
-      <button id="profileToggle" class="profile-toggle">
-        <i class="fas fa-user-circle"></i>
-      </button>
-      <% if(user && user.isAdmin) { %>
-        <button id="adminDashboardButton" class="admin-dashboard-toggle">
-          <i class="fas fa-user-shield"></i>
-        </button>
-      <% } %>
+    <div class="container">
+        <h1 class="logo"><i class="fas fa-layer-group"></i> Sistemlər</h1>
+        <div class="controls">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Axtar...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <select id="filterSelect">
+                <option value="all">Hamısı</option>
+                <option value="active">Aktiv</option>
+                <option value="inactive">Deaktiv</option>
+            </select>
+            <button id="modeToggle" class="mode-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="profileToggle" class="profile-toggle">
+                <i class="fas fa-user-circle"></i>
+            </button>
+            <% if(user && user.isAdmin) { %>
+                <button id="adminDashboardButton" class="admin-dashboard-toggle">
+                    <i class="fas fa-user-shield"></i>
+                </button>
+            <% } %>
+        </div>
     </div>
-  </div>
 </header>
 
-<!-- Xəbərlər Sətiri -->
 <div class="news-ticker">
-  <div class="news-container">
-    <span class="news-label">Xəbərlər:</span>
-    <div class="news-content" id="newsContent">
-      <span>Yüklənir...</span>
+    <div class="news-container">
+        <span class="news-label">Xəbərlər:</span>
+        <div class="news-content" id="newsContent">
+            <span>Yüklənir...</span>
+        </div>
     </div>
-  </div>
 </div>
 
 <main class="container main-grid" id="cardsContainer">
+    </main>
 
-  <div class="card" data-status="active">
-    <div class="card-icon bg-indigo"><i class="fas fa-headset"></i></div>
-    <div class="card-content">
-      <h2>Köməkçi Sistemi</h2>
-      <p>İstifadəçilərin problemlərini "ticket" yaradaraq bildirdiyi və dəstək aldığı platforma.</p>
-    </div>
-    <a href="http://172.22.60.35/login.php" target="_blank" class="card-button"><i class="fas fa-sign-in-alt"></i></a>
-  </div>
-
-  <div class="card" data-status="active">
-    <div class="card-icon bg-blue"><i class="fas fa-video"></i></div>
-    <div class="card-content">
-      <h2>Videokonfrans Sistemi</h2>
-      <p>Təhlükəsiz şəkildə videokonfranslara qoşulmağa imkan verən platforma.</p>
-    </div>
-    <a href="https://meet.mnbq.local/" target="_blank" class="card-button"><i class="fas fa-sign-in-alt"></i></a>
-  </div>
-
-  <div class="card" data-status="active">
-    <div class="card-icon bg-green"><i class="fas fa-file-signature"></i></div>
-    <div class="card-content">
-      <h2>MODOFFICE</h2>
-      <p>Sənədlərin çevrilməsi və idarə olunmasını asanlaşdıran təhlükəsiz converter sistemi.</p>
-    </div>
-    <a href="https://office.mnbq.local/Auth.aspx?refererurl=%2fDefault.aspx" target="_blank" class="card-button"><i class="fas fa-sign-in-alt"></i></a>
-  </div>
-
-  <div class="card" data-status="active">
-    <div class="card-icon bg-red"><i class="fas fa-shield-virus"></i></div>
-    <div class="card-content">
-      <h2>Təhlükəsiz İnternet Təlimi</h2>
-      <p>Kiber təhlükəsizlik üzrə təlim, quiz və sertifikat imkanı.</p>
-    </div>
-    <a href="http://172.22.60.29" target="_blank" class="card-button"><i class="fas fa-sign-in-alt"></i></a>
-  </div>
-
-  <div class="card" data-status="active">
-    <div class="card-icon bg-yellow"><i class="fas fa-tasks"></i></div>
-    <div class="card-content">
-      <h2>Tapşırıqçı Sistemi</h2>
-      <p>Tapşırıqların izlənməsi və idarə olunması üçün task manager platforması.</p>
-    </div>
-    <a href="https://task.mnbq.local/login" target="_blank" class="card-button"><i class="fas fa-sign-in-alt"></i></a>
-  </div>
-
-  <div class="card inactive" data-status="inactive">
-    <div class="card-icon bg-gray"><i class="fas fa-share-alt"></i></div>
-    <div class="card-content">
-      <h2>Fayl Paylaşımı</h2>
-      <p>Hazırda deaktivdir.</p>
-    </div>
-    <a href="http://172.22.62.195:5000/" class="card-button disabled"><i class="fas fa-ban"></i></a>
-  </div>
-
-</main>
-
-<!-- Kiber Təhlükəsizlik Məsləhətləri -->
 <div class="security-tips-container" id="securityTips">
-  <div class="security-tips-header">
-    <i class="fas fa-shield-alt"></i>
-    <span>Kiber Təhlükəsizlik Məsləhəti</span>
-    <button class="close-tips" id="closeTips">
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-  <div class="security-tips-content" id="securityTipsContent">
-    Məsləhətlər yüklənir...
-  </div>
+    <div class="security-tips-header">
+        <i class="fas fa-shield-alt"></i>
+        <span>Kiber Təhlükəsizlik Məsləhəti</span>
+        <button class="close-tips" id="closeTips">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="security-tips-content" id="securityTipsContent">
+        Məsləhətlər yüklənir...
+    </div>
 </div>
 
 <div class="profile-view" id="profileView">
-  <div class="profile-header">
-    <button id="closeProfile" class="close-profile"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="profile-content">
-    <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
-    <h3 class="profile-name" id="profileName"><%= user.username %></h3>
-    <p class="profile-email" id="profileEmail"><%= user.email %></p>
-    <div class="profile-details">
-      <div class="detail-item">
-        <i class="fas fa-id-card"></i>
-        <span>ID: <span id="profileId"><%= user.id %></span></span>
-      </div>
-      <div class="detail-item">
-        <i class="fas fa-user-cog"></i>
-        <span>Admin Status: <span id="profileAdmin"><%= user.isAdmin ? 'Yes' : 'No' %></span></span>
-      </div>
+    <div class="profile-header">
+        <button id="closeProfile" class="close-profile"><i class="fas fa-times"></i></button>
     </div>
-    <button id="logoutButton" class="logout-button">
-      <i class="fas fa-sign-out-alt"></i> Çıxış
-    </button>
-  </div>
+    <div class="profile-content">
+        <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
+        <h3 class="profile-name" id="profileName"><%= user.username %></h3>
+        <p class="profile-email" id="profileEmail"><%= user.email %></p>
+        <div class="profile-details">
+            <div class="detail-item">
+                <i class="fas fa-id-card"></i>
+                <span>ID: <span id="profileId"><%= user.id %></span></span>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-user-cog"></i>
+                <span>Admin Status: <span id="profileAdmin"><%= user.isAdmin ? 'Yes' : 'No' %></span></span>
+            </div>
+        </div>
+        <button id="logoutButton" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> Çıxış
+        </button>
+    </div>
 </div>
 
 <script src="/js/home.js"></script>
