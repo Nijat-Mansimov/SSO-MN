@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import { router as userRoutes } from "./src/routes/userRoutes.js";
 import { router as authRoutes } from "./src/routes/authRoutes.js";
 import { router as adminRoutes } from "./src/routes/adminRoutes.js";
+import { ssoRoutes } from "./src/routes/ssoRoutes.js";
 
 import { errorHandler } from "./src/middleware/errorMiddleware.js";
 import { isAuthenticated } from "./src/middleware/authMiddleware.js";
@@ -61,7 +62,8 @@ app.get("/login", (req, res) => {
 // --------------------
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/admins", adminRoutes);
+app.use("/api/sso", ssoRoutes); // YENİ ƏLAVƏ
 
 // Error Handling
 app.use(errorHandler);

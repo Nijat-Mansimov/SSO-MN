@@ -36,11 +36,11 @@ passport.use(
 // ------------------
 const LDAP_OPTIONS = {
   server: {
-    url: "ldap://your-ldap-server:389", // AD və ya OpenLDAP ünvanı
-    bindDN: "cn=admin,dc=example,dc=com", // Bind istifadəçi
-    bindCredentials: "admin_password", // onun parolu
-    searchBase: "ou=users,dc=example,dc=com",
-    searchFilter: "(uid={{username}})", // AD-də "sAMAccountName={{username}}" ola bilər
+    url: "ldap://172.22.60.1:636", // AD və ya OpenLDAP ünvanı
+    bindDN: "CN=office ldap,CN=Users,DC=mnbq,DC=local", // Bind istifadəçi
+    bindCredentials: "asdafw23rfwv234twe", // onun parolu
+    searchBase: "ou=545,ou=Departments-USERS,dc=mnbq,dc=local",
+    searchFilter: "(&(|(objectClass=user)(objectClass=group))(sAMAccountName=%(user)s)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))", // AD-də "sAMAccountName={{username}}" ola bilər
   },
 };
 

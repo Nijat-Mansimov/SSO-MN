@@ -2,127 +2,177 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Paneli</title>
-    <link rel="stylesheet" href="css/admin.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body>
-
-<div class="admin-layout">
-    <header class="admin-header">
-        <div class="header-content">
-            <h1 class="logo"><i class="fas fa-user-cog"></i> Admin Paneli</h1>
-            <div class="header-controls">
-                <span class="welcome-text">Xoş gəlmisiniz, <b id="usernamePlaceholder">...</b></span>
-                <button id="modeToggle" class="icon-btn theme-toggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button id="logoutButton" class="icon-btn logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
+<body class="light-mode">
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="logo-text">Admin Panel</span>
+        </div>
+        <nav class="nav">
+            <ul>
+                <li class="nav-item" data-section="home">
+                    <a href="/" class="nav-button">Əsas Səhifə</a>
+                </li>
+                <li class="nav-item active" data-section="users">
+                    <button class="nav-button">İstifadəçilər</button>
+                </li>
+                <li class="nav-item" data-section="services">
+                    <button class="nav-button">Xidmətlər</button>
+                </li>
+                <li class="nav-item" data-section="user-services">
+                    <button class="nav-button">İstifadəçi Xidmətləri</button>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="mode-toggle-container">
+                <button id="mode-toggle" class="mode-toggle-button">
+                    <span class="icon light-icon">☀️</span>
+                    <span class="icon dark-icon">🌙</span>
                 </button>
             </div>
-        </div>
-    </header>
-
-    <main class="admin-main">
-        <div class="content-wrapper">
-            <section class="card form-card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-user-plus"></i> İstifadəçi Yarat</h2>
-                </div>
-                <div class="card-body">
-                    <form id="createUserForm" class="user-form">
-                        <div class="form-group">
-                            <label for="username">İstifadəçi adı</label>
-                            <input type="text" id="username" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Şifrə</label>
-                            <input type="password" id="password" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="isAdmin"> Admin Hüquqları
-                            </label>
-                        </div>
-                        <button type="submit" class="primary-btn">Yarat</button>
-                    </form>
-                </div>
-            </section>
-
-            <section class="card table-card">
-                <div class="card-header controls-header">
-                    <h2 class="card-title"><i class="fas fa-users"></i> Bütün İstifadəçilər</h2>
-                    <div class="table-controls">
-                        <div class="search-box">
-                            <input type="text" id="searchInput" placeholder="Axtar...">
-                            <i class="fas fa-search search-icon"></i>
-                        </div>
-                        <select id="filterSelect" class="filter-select">
-                            <option value="all">Hamısı</option>
-                            <option value="admin">Admin</option>
-                            <option value="user">İstifadəçi</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-scrollable">
-                        <table class="users-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>İstifadəçi adı</th>
-                                    <th>Email</th>
-                                    <th>Admin</th>
-                                    <th>Əməliyyatlar</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTableBody">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <div id="updateModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title"><i class="fas fa-edit"></i> İstifadəçini Yenilə</h2>
-                <span class="close-btn">&times;</span>
+            <div class="logout-container">
+                <button id="logout-btn" class="logout-button">Çıxış</button>
             </div>
-            <div class="modal-body">
-                <form id="updateUserForm" class="user-form">
-                    <input type="hidden" id="updateUserId">
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <h1 id="panel-title">İstifadəçilər</h1>
+        </header>
+        
+        <section id="users-section" class="content-section active">
+            <div class="actions">
+                <button id="add-user-btn" class="add-button">Yeni İstifadəçi</button>
+            </div>
+            <div class="table-container">
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>İstifadəçi Adı</th>
+                            <th>Email</th>
+                            <th>Admin</th>
+                            <th>Yaradılış Tarixi</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="services-section" class="content-section hidden">
+            <div class="actions">
+                <button id="add-service-btn" class="add-button">Yeni Xidmət</button>
+            </div>
+            <div class="table-container">
+                <table id="services-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Xidmət Adı</th>
+                            <th>Təsvir</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="user-services-section" class="content-section hidden">
+            <div class="actions">
+                <button id="assign-service-btn" class="add-button">Xidmət Təyin Et</button>
+            </div>
+            <div class="assignment-form-container hidden">
+                <h3>Xidmət Təyin Et</h3>
+                <form id="assign-service-form">
                     <div class="form-group">
-                        <label for="updateUsername">İstifadəçi adı</label>
-                        <input type="text" id="updateUsername" required>
+                        <label for="assign-user-select">İstifadəçi Seçin:</label>
+                        <select id="assign-user-select" required></select>
                     </div>
                     <div class="form-group">
-                        <label for="updateEmail">Email</label>
-                        <input type="email" id="updateEmail" required>
+                        <label for="assign-services-select">Xidmətləri Seçin:</label>
+                        <select id="assign-services-select" multiple required></select>
+                        <small>Ctrl (Windows) / Cmd (Mac) basılı saxlayaraq çoxsaylı seçim edin.</small>
                     </div>
-                    <div class="form-group">
-                        <label for="updatePassword">Yeni Şifrə</label>
-                        <input type="password" id="updatePassword" placeholder="Boş buraxın">
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="updateIsAdmin"> Admin Hüquqları
-                        </label>
-                    </div>
-                    <button type="submit" class="primary-btn">Yadda saxla</button>
+                    <button type="submit">Təyin Et</button>
+                    <button type="button" class="cancel-button">Ləğv Et</button>
                 </form>
             </div>
+            <div class="table-container">
+                <table id="user-services-table">
+                    <thead>
+                        <tr>
+                            <th>İstifadəçi ID</th>
+                            <th>İstifadəçi Adı</th>
+                            <th>Xidmət ID</th>
+                            <th>Xidmət Adı</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content" id="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-title"></h2>
+            <form id="user-form" class="hidden">
+                <div class="form-group">
+                    <label for="username">İstifadəçi Adı:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifrə:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="isAdmin">
+                    <label for="isAdmin">Admin</label>
+                </div>
+                <button type="submit" class="submit-button"></button>
+            </form>
+
+            <form id="service-form" class="hidden">
+                <div class="form-group">
+                    <label for="service_name">Xidmət Adı (System adı):</label>
+                    <input type="text" id="service_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Ad (Display adı):</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="url">URL (API endpoint):</label>
+                    <input type="text" id="url" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Təsvir:</label>
+                    <textarea id="description"></textarea>
+                </div>
+                <button type="submit" class="submit-button"></button>
+            </form>
         </div>
     </div>
-</div>
 
-<script src="js/admin.js"></script>
+    <div id="notification" class="notification hidden"></div>
+
+    <script src="/js/admin.js"></script>
 </body>
 </html>
