@@ -25,4 +25,7 @@ router.get('/users', isAdmin, getAllUsers);
 // Bütün texnikləri gətir
 router.get('/technicians', isAdmin, getAllTechnicians);
 
+// Bütün managerleri gətir
+// router.get("/managers")
+
 export { router }; // named export

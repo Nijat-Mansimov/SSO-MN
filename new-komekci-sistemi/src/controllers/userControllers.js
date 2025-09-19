@@ -4,7 +4,15 @@ import pool from "../db/dbConnection.js";
 export const getTicket = async (req, res, next) => {
   try {
     const ticketId = req.params.id;
-    const userId = req.user.id; // Passport session vasitəsilə user ID
+    let userId;
+
+    if (req.user) {
+      userId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      userId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
     // Ticket-i DB-dən götür və yalnız bu user-ə aid olanı seç
     const [rows] = await pool.query(
@@ -30,7 +38,15 @@ export const getTicket = async (req, res, next) => {
 export const updateTicket = async (req, res, next) => {
   try {
     const ticketId = req.params.id;      // route param /tickets/:id
-    const userId = req.user.id;          // Passport session-dan istifadəçi ID
+    let userId;
+
+    if (req.user) {
+      userId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      userId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
     const { short_description, description, organization, type } = req.body;
 
     // 1️⃣ Ticket istifadəçiyə məxsusdursa yoxla
@@ -68,7 +84,15 @@ export const updateTicket = async (req, res, next) => {
 export const deleteTicket = async (req, res, next) => {
   try {
     const ticketId = req.params.id;      // route param, məsələn: /tickets/:id
-    const userId = req.user.id;          // Passport session-dan istifadəçi ID
+    let userId;
+
+    if (req.user) {
+      userId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      userId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
     // 1️⃣ Yoxla: ticket istifadəçiyə məxsusdursa
     const [rows] = await pool.query(
@@ -99,7 +123,15 @@ export const deleteTicket = async (req, res, next) => {
 // 🔹 Get my tickets
 export const getTickets = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Passport session vasitəsilə user ID
+    let userId;
+
+    if (req.user) {
+      userId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      userId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
     const [tickets] = await pool.query(
       `SELECT 
@@ -131,7 +163,15 @@ export const getTickets = async (req, res, next) => {
 export const createTicket = async (req, res, next) => {
   try {
     const { type, organization, phone_number, short_description, description } = req.body;
-    const userId = req.user.id; // passport session-dan istifadəçi ID
+    let userId;
+
+    if (req.user) {
+      userId = req.user.id; // Passport session vasitəsilə user ID
+    } else if (req.session && req.session.user) {
+      userId = req.session.user.id; // Sessiya vasitəsilə user ID
+    } else {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
     // 1️⃣ Ticket-i yaradın
     const [ticketResult] = await pool.query(
