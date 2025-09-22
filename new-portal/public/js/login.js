@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
+    const ldapLoginCheckbox = document.getElementById('ldapLogin'); // Get the new checkbox
 
     // Load saved theme preference from local storage
     const savedTheme = localStorage.getItem('theme');
@@ -34,20 +35,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
-        const rememberMe = document.getElementById('rememberMe').checked;
+        const useLdap = ldapLoginCheckbox.checked; // Get the state of the LDAP checkbox
 
         if (!username || !password) {
             alert('Please enter both username and password.');
             return;
         }
 
+        // Determine the correct API endpoint based on the checkbox
+        const endpoint = useLdap ? '/auth/ldap-login' : '/auth/login';
+        
         try {
-            const response = await fetch(BASE_URL + '/auth/login', {
+            const response = await fetch(BASE_URL + endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username, password, rememberMe })
+                body: JSON.stringify({ username, password })
             });
 
             const data = await response.json();

@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     userForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value || null;
         const password = document.getElementById('password').value;
         const isAdmin = document.getElementById('isAdmin').checked ? 1 : 0;
         const mode = userForm.dataset.mode;
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allServices.forEach(service => {
             const option = document.createElement('option');
             option.value = service.id;
-            option.textContent = service.service_name;
+            option.textContent = service.name;
             assignServicesSelect.appendChild(option);
         });
     };

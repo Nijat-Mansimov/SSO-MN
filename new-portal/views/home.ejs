@@ -3,88 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistemlər</title>
+    <title>Sistemlər Paneli</title>
     <link rel="stylesheet" href="/css/home.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
 <header class="header">
-    <div class="container">
-        <h1 class="logo"><i class="fas fa-layer-group"></i> Sistemlər</h1>
-        <div class="controls">
+    <div class="header-container">
+        <div class="logo-group">
+            <img src="/images/logo.png" alt="Qurum Loqosu" class="logo-image">
+            <h1 class="logo-text">Sistemlər Paneli</h1>
+        </div>
+        <nav class="main-nav">
             <div class="search-wrapper">
                 <input type="text" id="searchInput" placeholder="Axtar...">
                 <i class="fas fa-search search-icon"></i>
             </div>
-            <select id="filterSelect">
+            <select id="filterSelect" class="filter-select">
                 <option value="all">Hamısı</option>
                 <option value="active">Aktiv</option>
                 <option value="inactive">Deaktiv</option>
             </select>
-            <button id="modeToggle" class="mode-toggle">
-                <i class="fas fa-moon"></i>
-            </button>
-            <button id="profileToggle" class="profile-toggle">
-                <i class="fas fa-user-circle"></i>
-            </button>
-            <% if(user && user.isAdmin) { %>
-                <button id="adminDashboardButton" class="admin-dashboard-toggle">
-                    <i class="fas fa-user-shield"></i>
+            <div class="control-buttons">
+                <button id="modeToggle" class="control-button mode-toggle" title="Tema">
+                    <i class="fas fa-moon"></i>
                 </button>
-            <% } %>
-        </div>
+                <button id="profileToggle" class="control-button" title="Hesab">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <% if(user && user.isAdmin) { %>
+                    <button id="adminDashboardButton" class="control-button" title="Admin Paneli">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                <% } %>
+            </div>
+        </nav>
     </div>
 </header>
 
-<div class="news-ticker">
-    <div class="news-container">
-        <span class="news-label">Xəbərlər:</span>
-        <div class="news-content" id="newsContent">
+<div class="news-ticker-container">
+    <div class="news-ticker-wrapper">
+        <span class="news-label"><i class="fas fa-bullhorn"></i> Elanlar:</span>
+        <div class="news-content-wrapper" id="newsContent">
             <span>Yüklənir...</span>
         </div>
     </div>
 </div>
 
-<main class="container main-grid" id="cardsContainer">
+<main class="main-content-grid" id="cardsContainer">
     </main>
 
-<div class="security-tips-container" id="securityTips">
-    <div class="security-tips-header">
+<div class="security-tips-panel" id="securityTips">
+    <div class="tips-header">
         <i class="fas fa-shield-alt"></i>
         <span>Kiber Təhlükəsizlik Məsləhəti</span>
         <button class="close-tips" id="closeTips">
             <i class="fas fa-times"></i>
         </button>
     </div>
-    <div class="security-tips-content" id="securityTipsContent">
+    <div class="tips-body" id="securityTipsContent">
         Məsləhətlər yüklənir...
     </div>
 </div>
 
-<div class="profile-view" id="profileView">
+<div class="profile-sidebar" id="profileView">
     <div class="profile-header">
+        <h3 class="profile-title">İstifadəçi Hesabı</h3>
         <button id="closeProfile" class="close-profile"><i class="fas fa-times"></i></button>
     </div>
-    <div class="profile-content">
-        <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
-        <h3 class="profile-name" id="profileName"><%= user.username %></h3>
-        <p class="profile-email" id="profileEmail"><%= user.email %></p>
-        <div class="profile-details">
+    <div class="profile-body">
+        <div class="profile-info-group">
+            <i class="fas fa-user-circle profile-icon"></i>
+            <h4 class="profile-name" id="profileName"><%= user.username %></h4>
+            <p class="profile-email" id="profileEmail"><%= user.email %></p>
+        </div>
+        <div class="profile-details-list">
             <div class="detail-item">
-                <i class="fas fa-id-card"></i>
+                <i class="fas fa-id-card detail-icon"></i>
                 <span>ID: <span id="profileId"><%= user.id %></span></span>
             </div>
             <div class="detail-item">
-                <i class="fas fa-user-cog"></i>
-                <span>Admin Status: <span id="profileAdmin"><%= user.isAdmin ? 'Yes' : 'No' %></span></span>
+                <i class="fas fa-user-cog detail-icon"></i>
+                <span>Admin Statusu: <span id="profileAdmin"><%= user.isAdmin ? 'Bəli' : 'Xeyr' %></span></span>
             </div>
         </div>
+    </div>
+    <div class="profile-footer">
         <button id="logoutButton" class="logout-button">
             <i class="fas fa-sign-out-alt"></i> Çıxış
         </button>
     </div>
 </div>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-left">
+            <img src="/images/mn.png" alt="Milli Nişan" class="footer-logo">
+            <p class="copyright-text">© <%= new Date().getFullYear() %> Bütün hüquqlar qorunur.</p>
+        </div>
+        <div class="footer-right">
+            <span class="version-text">Versiya 1.0</span>
+        </div>
+    </div>
+</footer>
 
 <script src="/js/home.js"></script>
 </body>

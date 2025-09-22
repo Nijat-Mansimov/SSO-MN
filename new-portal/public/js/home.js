@@ -17,10 +17,9 @@ const securityTipsContent = document.getElementById('securityTipsContent');
 const closeTipsButton = document.getElementById('closeTips');
 const securityTipsContainer = document.getElementById('securityTips');
 
-
 // Bütün servislər üçün standart ikon və rəng
-const defaultIcon = 'fa-server'; 
-const defaultColor = 'bg-soft-blue'; // Bu rəngə uyğun olaraq CSS-ə əlavə edin
+const defaultIcon = 'fa-solid fa-layer-group';
+const defaultColor = 'bg-primary-color'; // Bu rəngə uyğun olaraq CSS-ə əlavə edin
 
 // Kiber Təhlükəsizlik Məsləhətləri
 const securityTips = [
@@ -57,18 +56,13 @@ async function fetchServices() {
         displayServices(services);
     } catch (error) {
         console.error('Error fetching services:', error);
-        cardsContainer.innerHTML = '<p class="error-message">Xidmətləri yükləmək mümkün olmadı. Zəhmət olmasa yenidən cəhd edin.</p>';
+        cardsContainer.innerHTML = '<p class="info-message">Xidmətləri yükləmək mümkün olmadı. Zəhmət olmasa yenidən cəhd edin.</p>';
     }
 }
 
 // Servis kartını yaradan funksiya
 function createServiceCard(service) {
     const card = document.createElement('div');
-    
-    // Sabit ikon və rəng istifadə olunur
-    const icon = defaultIcon;
-    const color = defaultColor;
-    
     const serviceUrl = service.url || '#';
     const serviceName = service.name || service.service_name || 'Naməlum Xidmət';
     const serviceDescription = service.description || 'Bu xidmət haqqında məlumat yoxdur.';
@@ -78,13 +72,13 @@ function createServiceCard(service) {
     card.setAttribute('data-status', status);
 
     card.innerHTML = `
-        <div class="card-icon ${color}"><i class="fa-solid fa-bell-concierge"></i></div>
+        <div class="card-icon-wrapper"><i class="${defaultIcon}"></i></div>
         <div class="card-content">
-            <h2>${serviceName}</h2>
-            <p>${serviceDescription}</p>
+            <h2 class="card-title">${serviceName}</h2>
+            <p class="card-description">${serviceDescription}</p>
         </div>
-        <a href="${serviceUrl}" class="card-button" target="_blank">
-            <i class="fas fa-sign-in-alt"></i>
+        <a href="${serviceUrl}" class="card-link-button" target="_blank">
+            Daxil ol
         </a>
     `;
 
@@ -112,8 +106,8 @@ function applyFilters() {
     const cards = cardsContainer.querySelectorAll('.card');
 
     cards.forEach(card => {
-        const title = card.querySelector('h2').textContent.toLowerCase();
-        const desc = card.querySelector('p').textContent.toLowerCase();
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const desc = card.querySelector('.card-description').textContent.toLowerCase();
         const status = card.getAttribute('data-status');
 
         const matchesSearch = title.includes(searchTerm) || desc.includes(searchTerm);
@@ -148,13 +142,13 @@ async function fetchProfileData() {
         profileName.textContent = user.username;
         profileEmail.textContent = user.email;
         profileId.textContent = user.id;
-        profileAdmin.textContent = user.isAdmin === 1 ? 'Yes' : 'No';
+        profileAdmin.textContent = user.isAdmin === 1 ? 'Bəli' : 'Xeyr';
     } catch (error) {
         console.error('Error fetching profile data:', error);
-        profileName.textContent = 'User not found';
-        profileEmail.textContent = 'Please log in';
-        profileId.textContent = 'N/A';
-        profileAdmin.textContent = 'N/A';
+        profileName.textContent = 'İstifadəçi tapılmadı';
+        profileEmail.textContent = 'Zəhmət olmasa daxil olun';
+        profileId.textContent = 'Mövcud deyil';
+        profileAdmin.textContent = 'Mövcud deyil';
     }
 }
 
@@ -162,14 +156,14 @@ async function handleLogout() {
     try {
         const response = await fetch('http://localhost:3000/api/auth/logout', { method: 'POST' });
         if (response.ok) {
-            alert('You have been logged out successfully.');
+            alert('Sistemdən uğurla çıxış etdiniz.');
             window.location.reload();
         } else {
-            alert('Logout failed. Please try again.');
+            alert('Çıxış uğursuz oldu. Zəhmət olmasa yenidən cəhd edin.');
         }
     } catch (error) {
         console.error('Error during logout:', error);
-        alert('An error occurred during logout.');
+        alert('Çıxış zamanı xəta baş verdi.');
     }
 }
 
