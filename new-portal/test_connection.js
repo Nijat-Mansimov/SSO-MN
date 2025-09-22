@@ -10,7 +10,7 @@ const LDAP_OPTIONS = {
     searchAttributes: ["cn", "mail", "sAMAccountName"]
   }
 };
-
+// 
 async function findUserByUsername(username) {
   return new Promise((resolve, reject) => {
     const client = ldap.createClient({
