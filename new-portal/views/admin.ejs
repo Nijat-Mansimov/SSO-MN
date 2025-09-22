@@ -5,35 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="/css/admin.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="light-mode">
     <aside class="sidebar">
-        <div class="logo">
-            <span class="logo-text">Admin Panel</span>
+        <div class="logo-group">
+            <h1 class="logo-text">Admin Panel</h1>
         </div>
         <nav class="nav">
             <ul>
                 <li class="nav-item" data-section="home">
-                    <a href="/" class="nav-button">Əsas Səhifə</a>
+                    <a href="/" class="nav-button"><i class="fas fa-home"></i>Əsas Səhifə</a>
                 </li>
                 <li class="nav-item active" data-section="users">
-                    <button class="nav-button">İstifadəçilər</button>
+                    <button class="nav-button"><i class="fas fa-users"></i>İstifadəçilər</button>
                 </li>
                 <li class="nav-item" data-section="services">
-                    <button class="nav-button">Xidmətlər</button>
+                    <button class="nav-button"><i class="fas fa-cogs"></i>Xidmətlər</button>
                 </li>
                 <li class="nav-item" data-section="user-services">
-                    <button class="nav-button">İstifadəçi Xidmətləri</button>
+                    <button class="nav-button"><i class="fas fa-link"></i>İstifadəçi Xidmətləri</button>
                 </li>
             </ul>
         </nav>
         <div class="sidebar-bottom">
             <div class="mode-toggle-container">
                 <button id="mode-toggle" class="mode-toggle-button">
-                    <span class="icon light-icon">☀️</span>
-                    <span class="icon dark-icon">🌙</span>
+                    <span class="icon light-icon"><i class="fas fa-sun"></i></span>
+                    <span class="icon dark-icon"><i class="fas fa-moon"></i></span>
                 </button>
             </div>
             <div class="logout-container">
@@ -49,7 +49,7 @@
         
         <section id="users-section" class="content-section active">
             <div class="actions">
-                <button id="add-user-btn" class="add-button">Yeni İstifadəçi</button>
+                <button id="add-user-btn" class="add-button"><i class="fas fa-plus"></i>Yeni İstifadəçi</button>
             </div>
             <div class="table-container">
                 <table id="users-table">
@@ -70,7 +70,7 @@
 
         <section id="services-section" class="content-section hidden">
             <div class="actions">
-                <button id="add-service-btn" class="add-button">Yeni Xidmət</button>
+                <button id="add-service-btn" class="add-button"><i class="fas fa-plus"></i>Yeni Xidmət</button>
             </div>
             <div class="table-container">
                 <table id="services-table">
@@ -78,6 +78,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Xidmət Adı</th>
+                            <th>Ad</th>
+                            <th>URL</th>
                             <th>Təsvir</th>
                             <th>Əməliyyatlar</th>
                         </tr>
@@ -89,7 +91,7 @@
 
         <section id="user-services-section" class="content-section hidden">
             <div class="actions">
-                <button id="assign-service-btn" class="add-button">Xidmət Təyin Et</button>
+                <button id="assign-service-btn" class="add-button"><i class="fas fa-link"></i>Xidmət Təyin Et</button>
             </div>
             <div class="assignment-form-container hidden">
                 <h3>Xidmət Təyin Et</h3>
@@ -136,7 +138,7 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email">
                 </div>
                 <div class="form-group">
                     <label for="password">Şifrə:</label>

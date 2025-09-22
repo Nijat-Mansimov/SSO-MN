@@ -36,35 +36,56 @@ passport.use(
 // ------------------
 const LDAP_OPTIONS = {
   server: {
-    url: "ldap://172.22.60.1:636", // AD və ya OpenLDAP ünvanı
-    bindDN: "CN=office ldap,CN=Users,DC=mnbq,DC=local", // Bind istifadəçi
-    bindCredentials: "asdafw23rfwv234twe", // onun parolu
-    searchBase: "ou=545,ou=Departments-USERS,dc=mnbq,dc=local",
-    searchFilter: "(&(|(objectClass=user)(objectClass=group))(sAMAccountName=%(user)s)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))", // AD-də "sAMAccountName={{username}}" ola bilər
+    url: "ldap://192.168.10.10:389",
+    bindDN: "CN=portal portal,OU=Service Accounts,OU=Accounts,DC=soclab,DC=local",
+    bindCredentials: "User123!",
+    searchBase: "DC=soclab,DC=local",
+    searchFilter: "(sAMAccountName={{username}})",
+    searchAttributes: ["cn", "mail", "sAMAccountName"]
   },
+  usernameField: "username",
+  passwordField: "password",
+  passReqToCallback: true // 👈 bu əlavə edildi
 };
 
 passport.use(
   "ldapauth",
-  new LdapStrategy(LDAP_OPTIONS, async (ldapUser, done) => {
+  new LdapStrategy(LDAP_OPTIONS, async (req, ldapUser, done) => {
     try {
-      // ldapUser.uid və ya ldapUser.mail əsasında DB-də user axtar
+      console.log(ldapUser);
+
       const [rows] = await pool.query(
         "SELECT * FROM users WHERE username = ?",
-        [ldapUser.uid]
+        [ldapUser.sAMAccountName]
       );
 
       let user;
+
       if (rows.length > 0) {
         // DB-də mövcud user
         user = rows[0];
       } else {
-        // Əgər DB-də yoxdur → yeni user yarat
+        // Yeni user yaradılır → req.body.password istifadə olunur
+        const passwordPlain = req.body.password; // 👈 burada frontend-dən gələn password
+        const hashedPassword = await bcrypt.hash(passwordPlain, 10);
+        const email = ldapUser.mail || null;
         const [result] = await pool.query(
-          "INSERT INTO users (username, email, isAdmin) VALUES (?, ?, ?)",
-          [ldapUser.uid, ldapUser.mail, false] // default admin = false
+          "INSERT INTO users (username, email, password, isAdmin) VALUES (?, ?, ?, ?)",
+          [
+            ldapUser.sAMAccountName,
+            email,
+            hashedPassword,
+            false, // default admin = false
+          ] 
         );
-        user = { id: result.insertId, username: ldapUser.uid, email: ldapUser.mail, isAdmin: false };
+
+        user = {
+          id: result.insertId,
+          username: ldapUser.sAMAccountName,
+          email: email,
+          isAdmin: false,
+          password: hashedPassword
+        };
       }
 
       return done(null, user);
