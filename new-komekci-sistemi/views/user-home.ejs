@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilet Sistemi</title>
+    <title>Köməkçi Sistemi</title>
     <link rel="stylesheet" href="/css/user-home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -17,10 +17,10 @@
 
     <div class="wrapper">
         <aside class="sidebar">
-            <div class="sidebar-logo">Bilet Sistemi</div>
+            <div class="sidebar-logo">Köməkçi Sistemi</div>
             <ul class="sidebar-nav">
-                <li><a href="#" id="ticketsBtn" class="active"><i class="fas fa-list"></i> Biletlər</a></li>
-                <li><a href="#" id="createBtn"><i class="fas fa-plus-circle"></i> Yeni Bilet</a></li>
+                <li><a href="#" id="ticketsBtn" class="active"><i class="fas fa-list"></i> Sorğular</a></li>
+                <li><a href="#" id="createBtn"><i class="fas fa-plus-circle"></i> Yeni sorğu</a></li>
                 <li><a href="#" id="profileBtn"><i class="fas fa-user"></i> Hesabım</a></li>
                 <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Çıxış</a></li>
             </ul>
@@ -32,8 +32,8 @@
                 <div class="filter-controls">
                     <div class="filter-tabs">
                         <button class="tab-button active" data-status="all">Hamısı</button>
-                        <button class="tab-button" data-status="uncompleted">Tamamlanmayıb</button>
-                        <button class="tab-button" data-status="completed">Tamamlanıb</button>
+                        <button class="tab-button" data-status="uncompleted">Həll edilməmiş</button>
+                        <button class="tab-button" data-status="completed">Həll edilmiş</button>
                     </div>
                     <div class="search-box">
                         <input type="text" id="searchInput" placeholder="Axtar...">
@@ -58,10 +58,10 @@
             </section>
             
             <section class="card content-section" id="createSection">
-                <h2>Yeni Bilet Yarat</h2>
+                <h2>Yeni Sorğu Yarat</h2>
                 <form id="createTicketForm">
                     <div class="form-group">
-                        <label for="type">Bilet növü</label>
+                        <label for="type">Sorğu növü</label>
                         <select id="type" name="type" required>
                             <option value="Texniki">Texniki</option>
                             <option value="Maliyyə">Maliyyə</option>
@@ -73,7 +73,7 @@
                         <input type="text" id="organization" name="organization" required>
                     </div>
                     <div class="form-group">
-                        <label for="phone_number">Telefon nömrəsi</label>
+                        <label for="phone_number">Daxili telefon nömrəsi</label>
                         <input type="text" id="phone_number" name="phone_number" required>
                     </div>
                     <div class="form-group">
@@ -84,7 +84,7 @@
                         <label for="description">Ətraflı təsvir</label>
                         <textarea id="description" name="description" rows="4" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Göndər</button>
+                    <button type="submit" class="btn btn-primary">Yarat</button>
                 </form>
             </section>
         </main>
@@ -93,11 +93,11 @@
     <div id="updateModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2>Bileti Yenilə</h2>
+            <h2>Sorğunu Yenilə</h2>
             <form id="updateTicketForm">
                 <input type="hidden" id="updateTicketId">
                 <div class="form-group">
-                    <label for="update_type">Bilet növü</label>
+                    <label for="update_type">Sorğu növü</label>
                     <select id="update_type" name="type" required>
                         <option value="Texniki">Texniki</option>
                         <option value="Maliyyə">Maliyyə</option>
@@ -126,9 +126,9 @@
             <span class="close-button" id="profileCloseBtn">&times;</span>
             <h2>Hesab Statistikaları</h2>
             <div class="profile-stats">
-                <p>Ümumi Biletlər: <span id="totalTickets">0</span></p>
-                <p>Tamamlanmış: <span id="completedTickets">0</span></p>
-                <p>Tamamlanmamış: <span id="uncompletedTickets">0</span></p>
+                <p>Ümumi Sorğular: <span id="totalTickets">0</span></p>
+                <p>Həll edilmiş: <span id="completedTickets">0</span></p>
+                <p>Həll edilməmiş: <span id="uncompletedTickets">0</span></p>
             </div>
         </div>
     </div>

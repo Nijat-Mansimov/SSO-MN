@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Login - Ticketing App</title>
+  <title>Daxil ol - Köməkçi Sistemi</title>
   <link rel="stylesheet" href="/css/login.css" />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
@@ -23,34 +23,35 @@
     <div class="login-card">
       <div class="logo-section">
         <img src="/images/logo.png" alt="App Logo" class="logo" />
-        <h1>Ticketing App</h1>
-        <p class="subtitle">Sign in to access your dashboard</p>
+        <img src="/images/mn.png" style="width: 53px;" alt="App Logo" class="logo" />
+        <h1>Köməkçi Sistemi</h1>
+        <p class="subtitle">Hesaba daxil ol</p>
       </div>
 
       <form id="loginForm">
         <div class="input-group">
-          <label for="username">Username</label>
+          <label for="username">İstifadəçi adı</label>
           <input
             type="text"
             id="username"
             name="username"
-            placeholder="Enter your username"
+            placeholder="İstifadəçi adını daxil edin"
             required
           />
         </div>
 
         <div class="input-group">
-          <label for="password">Password</label>
+          <label for="password">Parol</label>
           <input
             type="password"
             id="password"
             name="password"
-            placeholder="Enter your password"
+            placeholder="Parolu daxil edin"
             required
           />
         </div>
 
-        <button type="submit" class="btn-primary">Login</button>
+        <button type="submit" class="btn-primary">Daxil ol</button>
 
         <p id="errorMessage" class="error-message"></p>
       </form>

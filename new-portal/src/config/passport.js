@@ -36,16 +36,19 @@ passport.use(
 // ------------------
 const LDAP_OPTIONS = {
   server: {
-    url: "ldap://192.168.10.10:389",
-    bindDN: "CN=portal portal,OU=Service Accounts,OU=Accounts,DC=soclab,DC=local",
-    bindCredentials: "User123!",
-    searchBase: "DC=soclab,DC=local",
+    url: "ldaps://172.22.60.1:636",
+    bindDN: "CN=office ldap,CN=Users,DC=mnbq,DC=local",
+    bindCredentials: "KqTfXk3rvbLj6PXmIgY9",
+    searchBase: "ou=545,ou=Departments-USERS,dc=mnbq,dc=local",
     searchFilter: "(sAMAccountName={{username}})",
-    searchAttributes: ["cn", "mail", "sAMAccountName"]
+    searchAttributes: ["cn", "mail", "sAMAccountName"],
+    tlsOptions: {
+      rejectUnauthorized: false,   // sertifikat yoxlanmır
+    },
   },
   usernameField: "username",
   passwordField: "password",
-  passReqToCallback: true // 👈 bu əlavə edildi
+  passReqToCallback: true // bu əlavə edildi
 };
 
 passport.use(

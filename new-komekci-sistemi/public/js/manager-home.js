@@ -103,7 +103,7 @@ async function fetchData() {
 }
 
 function populateTechnicianFilters() {
-    technicianFilter.innerHTML = '<option value="">Bütün Texniklər</option>';
+    technicianFilter.innerHTML = '<option value="">Bütün HelpDesk əməkdaşları</option>';
     technicianSelect.innerHTML = '';
 
     allTechnicians.forEach(t => {
@@ -140,13 +140,13 @@ function renderTickets() {
         const row = document.createElement("tr");
         const isCompleted = t.status === 'completed';
         const assignBtnHtml = isCompleted
-            ? `<button class="btn assign-btn disabled" disabled>Təyin et</button>`
-            : `<button class="btn assign-btn" data-id="${t.id}">Təyin et</button>`;
+            ? `<button class="btn assign-btn disabled" disabled>Yönləndir</button>`
+            : `<button class="btn assign-btn" data-id="${t.id}">Yönləndir</button>`;
 
         row.innerHTML = `
             <td>#${t.id}</td>
             <td>${t.short_description}</td>
-            <td>${t.status === 'uncompleted' ? 'Tamamlanmayıb' : t.status === 'in_progress' ? 'İcra olunur' : 'Tamamlanıb'}</td>
+            <td>${t.status === 'uncompleted' ? 'Həll edilməmiş' : t.status === 'in_progress' ? 'İcra olunur' : 'Həll edilmiş'}</td>
             <td>${t.created_by_username}</td>
             <td>${t.assigned_to_username || "Təyin edilməyib"}</td>
             <td>
@@ -218,7 +218,7 @@ async function openViewModal(ticketId, isResolved) {
             <p><strong>Növ:</strong> ${ticketDetails.type}</p>
             <p><strong>Təşkilat:</strong> ${ticketDetails.organization}</p>
             <p><strong>Telefon:</strong> ${ticketDetails.phone_number}</p>
-            <p><strong>Status:</strong> ${ticketDetails.status === 'uncompleted' ? 'Tamamlanmayıb' : ticketDetails.status === 'in_progress' ? 'İcra olunur' : 'Tamamlanıb'}</p>
+            <p><strong>Status:</strong> ${ticketDetails.status === 'uncompleted' ? 'Həll edilməmiş' : ticketDetails.status === 'in_progress' ? 'İcra olunur' : 'Həll edilmiş'}</p>
             <p><strong>Yaradan:</strong> ${ticketDetails.created_by_username}</p>
             <p><strong>Təyin olunub:</strong> ${ticketDetails.assigned_to_username || "Təyin edilməyib"}</p>
             <p><strong>Qısa təsvir:</strong> ${ticketDetails.short_description}</p>
@@ -238,7 +238,7 @@ async function openViewModal(ticketId, isResolved) {
 
     } catch (error) {
         console.error('Error fetching ticket details:', error);
-        showPopup('Xəta!', 'Biletin məlumatlarını gətirərkən xəta baş verdi.');
+        showPopup('Xəta!', 'Sorğu məlumatlarını gətirərkən xəta baş verdi.');
     }
 }
 
@@ -310,7 +310,7 @@ confirmAssignBtn.addEventListener("click", async () => {
         
         const data = await res.json();
         if (!res.ok) {
-            throw new Error(data.message || 'Tapşırıq təyin edilərkən xəta baş verdi.');
+            throw new Error(data.message || 'Sorğu yönləndirilərkən xəta baş verdi.');
         }
 
         showPopup('Uğurlu!', data.message);

@@ -19,8 +19,8 @@
         <aside class="sidebar">
             <div class="sidebar-logo">Menecer Paneli</div>
             <ul class="sidebar-nav">
-                <li><a href="#" class="active" data-target="tickets-section" id="ticketsBtn"><i class="fas fa-list"></i> Bütün Biletlər</a></li>
-                <li><a href="#" data-target="resolved-section" id="resolvedBtn"><i class="fas fa-check-circle"></i> Həll edilmiş Biletlər</a></li>
+                <li><a href="#" class="active" data-target="tickets-section" id="ticketsBtn"><i class="fas fa-list"></i> Bütün Sorğular</a></li>
+                <li><a href="#" data-target="resolved-section" id="resolvedBtn"><i class="fas fa-check-circle"></i> Həll edilmiş Sorğular</a></li>
                 <!-- ✅ Yeni əlavə -->
                 <li><a href="/user-home" id="goToUserHome"><i class="fas fa-user"></i> İstifadəçi Paneli</a></li>
                 <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Çıxış</a></li>
@@ -29,13 +29,13 @@
 
         <main class="main-content">
             <section class="card content-section active" id="tickets-section">
-                <h2>Bütün Biletlər</h2>
+                <h2>Bütün Sorğular</h2>
                 <div class="filter-controls">
                     <div class="filter-tabs">
                         <button class="tab-button active" data-status="all">Hamısı</button>
-                        <button class="tab-button" data-status="uncompleted">Tamamlanmayıb</button>
-                        <button class="tab-button" data-status="in_progress">İcra olunur</button>
-                        <button class="tab-button" data-status="completed">Tamamlanıb</button>
+                        <button class="tab-button" data-status="uncompleted">Həll edilməmiş</button>
+                        <button class="tab-button" data-status="in_progress">İcrada olan</button>
+                        <button class="tab-button" data-status="completed">Həll edilmiş</button>
                     </div>
                     <div class="search-box">
                         <input type="text" id="ticketsSearchInput" placeholder="Axtar...">
@@ -65,7 +65,7 @@
             </section>
             
             <section class="card content-section" id="resolved-section">
-                <h2>Həll edilmiş Biletlər</h2>
+                <h2>Həll edilmiş Sorğular</h2>
                 <div class="filter-controls">
                     <div class="search-box">
                         <input type="text" id="resolvedSearchInput" placeholder="Axtar...">
@@ -93,21 +93,21 @@
     <div id="assignModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2>Biletə Texnik Təyin Et</h2>
+            <h2>Sorğunu HelpDesk'ə yönləndir</h2>
             <div class="form-group">
-                <label for="technicianSelect">Texnik seçin:</label>
+                <label for="technicianSelect">Yönləndirmək istədiyiniz əməkdaşı seçin:</label>
                 <div class="custom-select-container">
                     <select id="technicianSelect" required></select>
                 </div>
             </div>
-            <button id="confirmAssignBtn" class="btn btn-primary">Təyin et</button>
+            <button id="confirmAssignBtn" class="btn btn-primary">Yönləndir</button>
         </div>
     </div>
 
     <div id="viewModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2>Biletin Detalları</h2>
+            <h2>Sorğunun Detalları</h2>
             <div id="ticketDetailsContent" class="details-content"></div>
         </div>
     </div>

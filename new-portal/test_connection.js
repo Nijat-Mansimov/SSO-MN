@@ -4,7 +4,7 @@ const LDAP_OPTIONS = {
   server: {
     url: "ldap://192.168.10.10:389",
     bindDN: "CN=Administrator,CN=Users,DC=soclab,DC=local",
-    bindCredentials: "User123!",
+    bindCredentials: "User123!",    
     searchBase: "DC=soclab,DC=local",
     searchFilter: "(sAMAccountName={{username}})",
     searchAttributes: ["cn", "mail", "sAMAccountName"]
