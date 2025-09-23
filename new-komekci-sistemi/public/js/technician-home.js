@@ -139,7 +139,7 @@ function renderTickets() {
         row.innerHTML = `
             <td>#${t.id}</td>
             <td>${t.short_description}</td>
-            <td>${t.status === 'uncompleted' ? 'Tamamlanmayıb' : t.status === 'in_progress' ? 'İcra olunur' : 'Tamamlanıb'}</td>
+            <td>${t.status === 'uncompleted' ? 'Həll edilməmiş' : t.status === 'in_progress' ? 'İcra olunur' : 'Həll edildi'}</td>
             <td>${t.created_by_username}</td>
             <td>
                 <button class="btn view-btn" data-id="${t.id}" data-resolved="false">Bax</button>
@@ -219,9 +219,9 @@ function renderAllResolved() {
 async function openStatusModal(ticketId) {
     selectedTicketId = ticketId;
     statusSelect.innerHTML = `
-        <option value="uncompleted">Tamamlanmayıb</option>
+        <option value="uncompleted">Həll edilməmiş</option>
         <option value="in_progress">İcra olunur</option>
-        <option value="completed">Tamamlanıb</option>
+        <option value="completed">Həll edildi</option>
     `;
 
     // Fetch current status to set selected option
@@ -249,7 +249,7 @@ async function openViewModal(ticketId, type) {
             : `${baseUrl}/tickets?id=${ticketId}`;
         
         const res = await fetch(api);
-        if (!res.ok) throw new Error('Bilet məlumatlarını gətirmək mümkün olmadı.');
+        if (!res.ok) throw new Error('Sorğu məlumatlarını gətirmək mümkün olmadı.');
 
         const data = await res.json();
         
@@ -262,7 +262,7 @@ async function openViewModal(ticketId, type) {
             <p><strong>Növ:</strong> ${ticketDetails.type}</p>
             <p><strong>Təşkilat:</strong> ${ticketDetails.organization}</p>
             <p><strong>Telefon:</strong> ${ticketDetails.phone_number}</p>
-            <p><strong>Status:</strong> ${ticketDetails.status === 'uncompleted' ? 'Tamamlanmayıb' : ticketDetails.status === 'in_progress' ? 'İcra olunur' : 'Tamamlanıb'}</p>
+            <p><strong>Status:</strong> ${ticketDetails.status === 'uncompleted' ? 'Həll edilməmiş' : ticketDetails.status === 'in_progress' ? 'İcra olunur' : 'Həll edildi'}</p>
             <p><strong>Yaradan:</strong> ${ticketDetails.created_by_username}</p>
             <p><strong>Qısa təsvir:</strong> ${ticketDetails.short_description}</p>
             <p><strong>Ətraflı təsvir:</strong> ${ticketDetails.description}</p>
@@ -284,7 +284,7 @@ async function openViewModal(ticketId, type) {
 
     } catch (error) {
         console.error('Error fetching ticket details:', error);
-        showPopup('Xəta!', 'Biletin məlumatlarını gətirərkən xəta baş verdi.');
+        showPopup('Xəta!', 'Sorğunun məlumatlarını gətirərkən xəta baş verdi.');
     }
 }
 
@@ -367,7 +367,7 @@ confirmStatusBtn.addEventListener("click", async () => {
     const comment = commentInput.value;
 
     if (newStatus === 'completed' && !comment) {
-        showPopup('Xəta!', 'Bilet tamamlananda şərh sahəsi boş ola bilməz.');
+        showPopup('Xəta!', 'Sorğu tamamlananda şərh sahəsi boş ola bilməz.');
         return;
     }
 

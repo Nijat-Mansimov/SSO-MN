@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
-const password = '654731Cyber!';
+const password = 'admin';
 const saltRounds = 10; // Recommended value is between 10-12
 
 bcrypt.hash(password, saltRounds)
@@ -11,3 +11,5 @@ bcrypt.hash(password, saltRounds)
   .catch(err => {
     console.error('Error hashing password:', err);
   });
+
+  $2b$10$zIVONDb6mjvm8UVSwdwQ5eYh3zDgHPQJgdvXlSHVNlP7747TRLBP6
