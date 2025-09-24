@@ -1,7 +1,12 @@
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import https from 'https';
 import pool from "../db/dbConnection.js";
 import bcrypt from "bcrypt";
+
+const agent = new https.Agent({  
+    rejectUnauthorized: false // sertifikat yoxlamasını söndürür
+});
 
 const JWT_SECRET = 'portal_komekci_shared_secret_key_2025';
 const PORTAL_VERIFY_API = 'https://portal.mnbq.local/api/sso/verify-token';
@@ -18,9 +23,10 @@ export const handleSSOLogin = async (req, res) => {
         }
 
         // Tokenı PORTAL-da yoxlat
-        const verificationResponse = await axios.post(PORTAL_VERIFY_API, {
-            token: sso_token
-        });
+        const verificationResponse = await axios.post(PORTAL_VERIFY_API, 
+            { token: sso_token },
+            { httpsAgent: agent }
+        );
 
         if (verificationResponse.data.valid) {
             const userData = verificationResponse.data.user;
