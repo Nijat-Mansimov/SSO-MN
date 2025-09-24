@@ -1,5 +1,7 @@
 import pool from "../db/dbConnection.js";
 import bcrypt from "bcrypt";
+import axios from "axios";
+
 
 // ======================= USERS =======================
 
@@ -200,7 +202,7 @@ export const deleteService = async (req, res) => {
 // Xidmətə görə SSO API mapping
 const SERVICE_SSO_API = {
   komekci_sistemi: "http://172.22.61.7:4000/api/sso/create/user",
-  salam: "http://localhost:5000/api/sso/create/user"
+  salam: "http://172.22.61.7:5000/api/sso/create/user"
 };
 
 export const assignServiceToUser = async (req, res) => {

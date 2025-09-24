@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const notification = document.getElementById('notification');
 
-    // const API_BASE_URL = 'http://localhost:3000/api/admins';
+    // const API_BASE_URL = 'http://172.22.61.7:3000/api/admins';
 
     // Global dəyişənlər
     let allUsers = [];

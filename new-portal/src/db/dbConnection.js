@@ -5,9 +5,9 @@ import mysql from "mysql2/promise"
 
 const pool = mysql.createPool({
   host: 'localhost',     // change if not local
-  user: 'portaluser',          // your MySQL username
+  user: 'portal',          // your MySQL username
   password: 'Cyber2025!', // your MySQL password
-  database: 'ticketing_app',     // your database name
+  database: 'portal',     // your database name
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
