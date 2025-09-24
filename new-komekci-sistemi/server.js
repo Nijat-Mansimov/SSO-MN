@@ -23,7 +23,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORTAL_API = "https://portal.mnbq.local/api" 
-const KOMEKCI_SISTEMI_API = "https://ks.mnbq.local/api" 
+const KOMEKCI_SISTEMI_API = "https://portal.mnbq.local:4000/api" 
 
 // Middleware
 app.use(cors());
