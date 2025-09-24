@@ -197,8 +197,12 @@ export const deleteService = async (req, res) => {
 };
 
 // ======================= USER_SERVICES =======================
+// Xidmətə görə SSO API mapping
+const SERVICE_SSO_API = {
+  komekci_sistemi: "http://172.22.61.7:4000/api/sso/create/user",
+  salam: "http://localhost:5000/api/sso/create/user"
+};
 
-// Assign multiple services to a user
 export const assignServiceToUser = async (req, res) => {
   const { userId, serviceIds } = req.body; // serviceIds array olacaq
   if (!userId || !Array.isArray(serviceIds) || serviceIds.length === 0) {
@@ -206,33 +210,69 @@ export const assignServiceToUser = async (req, res) => {
   }
 
   try {
-    // Mövcud təyinatları yoxla
+    // 1️⃣ Seçilmiş istifadəçinin məlumatını götür
+    const [userRows] = await pool.query(
+      "SELECT username, password FROM users WHERE id = ?",
+      [userId]
+    );
+
+    if (userRows.length === 0) {
+      return res.status(404).json({ error: "İstifadəçi tapılmadı" });
+    }
+
+    const { username, password } = userRows[0];
+
+    // 2️⃣ Hər bir xidmət üçün SSO istifadəçini yarat
+    for (let serviceId of serviceIds) {
+      // Xidmətin adını əldə et
+      const [serviceRow] = await pool.query(
+        "SELECT service_name FROM services WHERE id = ?",
+        [serviceId]
+      );
+      if (!serviceRow.length) continue; // Xidmət tapılmadısa skip et
+
+      const serviceName = serviceRow[0].service_name;
+      const SSO_CREATE_USER_API = SERVICE_SSO_API[serviceName];
+
+      if (!SSO_CREATE_USER_API) {
+        console.warn(`SSO API tapılmadı: ${serviceName}`);
+        continue; // mapping yoxdursa skip et
+      }
+
+      try {
+        await axios.post(SSO_CREATE_USER_API, {
+          username,
+          password,
+          role: "user"
+        });
+      } catch (err) {
+        console.warn(`SSO user creation warning for ${serviceName}:`, err.response?.data || err.message);
+      }
+    }
+
+    // 3️⃣ Mövcud təyinatları yoxla
     const [existing] = await pool.query(
       "SELECT service_id FROM user_services WHERE user_id = ?",
       [userId]
     );
     const existingIds = existing.map(row => row.service_id);
 
-    // Yalnız yeni xidmətləri əlavə etmək üçün filtrlə
+    // 4️⃣ Yalnız yeni xidmətləri əlavə etmək üçün filtrlə
     const newServiceIds = serviceIds.filter(serviceId => !existingIds.includes(serviceId));
-    
-    // Əgər əlavə ediləcək yeni xidmət yoxdursa, xəta qaytar
     if (newServiceIds.length === 0) {
       return res.status(400).json({ error: "Bütün seçilmiş xidmətlər artıq təyin olunub" });
     }
 
-    // `mysql2` bulk insert üçün dəyərlər array-ini düzəlt
+    // 5️⃣ Bulk insert üçün dəyərləri hazırla
     const valuesToInsert = newServiceIds.map(serviceId => [userId, serviceId]);
-
-    // Bulk insert əməliyyatını həyata keçir
     const [result] = await pool.query(
       "INSERT INTO user_services (user_id, service_id) VALUES ?",
       [valuesToInsert]
     );
 
-    res.json({ 
-      message: `${result.affectedRows} xidmət uğurla təyin olundu.`, 
-      added: result.affectedRows 
+    res.json({
+      message: `${result.affectedRows} xidmət uğurla təyin olundu.`,
+      added: result.affectedRows
     });
 
   } catch (err) {

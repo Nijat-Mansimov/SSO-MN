@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleSSOLogin, verifyTokenDirectly } from '../controllers/ssoController.js';
+import { handleSSOLogin, verifyTokenDirectly, createUser } from '../controllers/ssoController.js';
 
 const router = express.Router();
 
@@ -12,5 +12,7 @@ router.post('/verify-token', (req, res) => {
     const result = verifyTokenDirectly(token);
     res.json(result);
 });
+
+router.post('/create/user', createUser)
 
 export { router as ssoRoutes };

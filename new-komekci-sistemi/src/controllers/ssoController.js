@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import pool from "../db/dbConnection.js";
+import bcrypt from "bcrypt";
 
-const JWT_SECRET = 'app1_app2_shared_secret_key_2024';
-const APP1_VERIFY_URL = 'http://localhost:3000/api/sso/verify-token';
+const JWT_SECRET = 'portal_komekci_shared_secret_key_2025';
+const PORTAL_VERIFY_API = 'http://173.23.61.7:3000/api/sso/verify-token';
 
 // SSO token yoxlama və login
 export const handleSSOLogin = async (req, res) => {
@@ -16,8 +17,8 @@ export const handleSSOLogin = async (req, res) => {
             });
         }
 
-        // Tokenı App1-də yoxlat
-        const verificationResponse = await axios.post(APP1_VERIFY_URL, {
+        // Tokenı PORTAL-da yoxlat
+        const verificationResponse = await axios.post(PORTAL_VERIFY_API, {
             token: sso_token
         });
 
@@ -85,4 +86,46 @@ export const verifyTokenDirectly = (token) => {
     } catch (error) {
         return { valid: false, error: error.message };
     }
+};
+
+
+// SSO redirect zamani user'i yarat
+export const createUser = async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
+
+    // 1️⃣ Email yoxlama
+    const [emailRows] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+    if (emailRows.length > 0) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // 2️⃣ Username yoxlama
+    const [usernameRows] = await pool.query("SELECT * FROM users WHERE username = ?", [username]);
+    if (usernameRows.length > 0) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    // 3️⃣ Parolu hash etmək
+    // const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 4️⃣ Yeni istifadəçi yaratmaq
+    const [result] = await pool.query(
+      "INSERT INTO users (username, email, password, role, tickets) VALUES (?, ?, ?, ?, JSON_ARRAY())",
+      [username, email, password, role || "user"]
+    );
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        id: result.insertId,
+        username,
+        email,
+        role: role || "user"
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
