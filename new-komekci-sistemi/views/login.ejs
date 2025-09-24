@@ -1,67 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Daxil ol - Köməkçi Sistemi</title>
-  <link rel="stylesheet" href="/css/login.css" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-    rel="stylesheet"
-  />
-</head>
-<body>
-  <!-- Theme Toggle -->
-  <div class="theme-toggle-container">
-    <label class="switch">
-      <input type="checkbox" id="darkModeToggle" />
-      <span class="slider round"></span>
-    </label>
-  </div>
-
-  <!-- Login Section -->
-  <div class="wrapper">
-    <div class="login-card">
-      <div class="logo-section">
-        <img src="/images/logo.png" alt="App Logo" class="logo" />
-        <img src="/images/mn.png" style="width: 53px;" alt="App Logo" class="logo" />
-        <h1>Köməkçi Sistemi</h1>
-        <p class="subtitle">Hesaba daxil ol</p>
+   <head>
+          
+      <meta charset="UTF-8">
+          
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          
+      <title>Daxil ol - Köməkçi Sistemi</title>
+          
+      <link rel="stylesheet" href="css/login.css">
+          
+      <link rel="icon" type="image/png" href="images/favicon.png">
+         <script>
+            // Serverdən gələn .env dəyişəni
+            const KOMEKCI_SISTEMI_API = "<%= KOMEKCI_SISTEMI_API %>";
+         </script>
+          <script src="js/login.js" defer></script>
+   </head>
+   <body class="light-mode">
+          
+      <div class="login-container">
+                 
+         <div class="theme-toggle-container">
+                        <label class="switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    
+         </div>
+                 
+         <div class="logo-group">
+                        <img src="images/logo.png" alt="Main Logo" class="logo main-logo">
+                        <img src="images/mn.png" alt="Secondary Logo" class="logo secondary-logo">
+                    
+         </div>
+                 
+         <div class="login-box">
+                        
+            <h2>Köməkçi Sisteminə Xoş Gəlmisiniz!</h2>
+                        
+            <p>Hesaba daxil ol</p>
+                        
+            <form id="loginForm">
+                               
+               <div class="input-group">
+                                      <input type="text" id="username" name="username" placeholder="Username" required>
+                                  
+               </div>
+                               
+               <div class="input-group">
+                                      <input type="password" id="password" name="password" placeholder="Password" required>
+                                  
+               </div>
+                               
+               <div class="options-group" style="justify-content: flex-start; margin-top: -15px;">
+                  <div class="remember-me">
+                     <input type="checkbox" id="ldapLogin">
+                     <label for="ldapLogin">İnternet istifadəçisi kimi</label>
+                  </div>
+               </div>
+                               <button type="submit" class="login-button">Daxil ol</button>
+                           
+            </form>
+                    
+         </div>
+             
       </div>
-
-      <form id="loginForm">
-        <div class="input-group">
-          <label for="username">İstifadəçi adı</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="İstifadəçi adını daxil edin"
-            required
-          />
-        </div>
-
-        <div class="input-group">
-          <label for="password">Parol</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Parolu daxil edin"
-            required
-          />
-        </div>
-
-        <button type="submit" class="btn-primary">Daxil ol</button>
-
-        <p id="errorMessage" class="error-message"></p>
-      </form>
-    </div>
-  </div>
-    <script>
-        // Serverdən gələn .env dəyişəni
-        const PORTAL_API = "<%= PORTAL_API %>";
-        const KOMEKCI_SISTEMI_API = "<%= KOMEKCI_SISTEMI_API %>";
-    </script>
-  <script src="/js/login.js" defer></script>
-</body>
+   </body>
 </html>

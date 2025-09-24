@@ -70,3 +70,21 @@ export const register = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// LDAP Login
+export const ldapLogin = (req, res, next) => {
+  console.log("DEBUG 1")
+  passport.authenticate("ldapauth", (err, user, info) => {
+    if (err) return next(err);
+    console.log("DEBUG 2")
+    if (!user) return res.status(400).json({ error: info?.message || "Invalid LDAP login" });
+
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      res.json({
+        message: "LDAP login successful",
+        user,
+      });
+    });
+  })(req, res, next);
+};
