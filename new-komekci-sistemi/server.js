@@ -4,7 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import passport from "./src/config/passport.js";
 import session from "express-session";
-
+import dotenv from "dotenv";
+dotenv.config();
 
 import { errorHandler } from "./src/middleware/errorMiddleware.js";
 import { router as authRoutes } from "./src/routes/authRoutes.js";
@@ -22,8 +23,9 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORTAL_API = "https://portal.mnbq.local/api" 
-const KOMEKCI_SISTEMI_API = "http://portal.mnbq.local:4000/api" 
+// Default dəyərlər (əgər .env-də tapılmazsa)
+const PORTAL_API = process.env.PORTAL_API || "https://portal.mnbq.local/api";
+const KOMEKCI_SISTEMI_API = process.env.KOMEKCI_SISTEMI_API || "http://portal.mnbq.local:4000/api";
 
 // Middleware
 app.use(cors());
@@ -54,40 +56,25 @@ app.use("/api/admins", adminRoutes)
 app.use("/api/sso", ssoRoutes); // YENİ ƏLAVƏ
 // app.use("/api/sso/create/user",)
 
-// Login and Register (public)
+// Pages
 app.get("/login", (req, res) => {
-  res.render("login", {
-    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
-  });
+  res.render("login", { PORTAL_API, KOMEKCI_SISTEMI_API });
 });
 
 app.get("/user-home", isAuthenticated, (req, res) => {
-  res.render("user-home", {
-    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
-  });
+  res.render("user-home", { PORTAL_API, KOMEKCI_SISTEMI_API });
 });
 
 app.get("/manager-home", isManager, (req, res) => {
-  res.render("manager-home", {
-    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
-  });
+  res.render("manager-home", { PORTAL_API, KOMEKCI_SISTEMI_API });
 });
 
 app.get("/technician-home", isTechnician, (req, res) => {
-  res.render("technician-home", {
-    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
-  });
+  res.render("technician-home", { PORTAL_API, KOMEKCI_SISTEMI_API });
 });
 
 app.get("/admin-home", isAdmin, (req, res) => {
-  res.render("admin-home", {
-    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
-  });
+  res.render("admin-home", { PORTAL_API, KOMEKCI_SISTEMI_API });
 });
 
 // Error Handling
