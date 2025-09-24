@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 // Gizli açar (real tətbiqdə environment dəyişənində saxlayın)
 const JWT_SECRET = 'app1_app2_shared_secret_key_2024';
-const KOMEKCI_SISTEMI_API = 'https://portal.mnbq.local:4000/api';
+const KOMEKCI_SISTEMI_API = 'http://portal.mnbq.local:4000/api';
 
 // SSO token yaratma
 export const generateSSOTokenForKomekciSistemi = (req, res) => {

@@ -47,7 +47,7 @@ app.get("/", isAuthenticated, (req, res) => {
   res.render("home", { 
     user: req.user,
     PORTAL_API: process.env.PORTAL_API || "https://portal.mnbq.local/api",
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "https://portal.mnbq.local:4000/api",
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "http://portal.mnbq.local:4000/api",
   });
 });
 
@@ -56,7 +56,7 @@ app.get("/admin", isAdmin, (req, res) => {
   res.render("admin", { 
     user: req.user,
     PORTAL_API: process.env.PORTAL_API || "https://portal.mnbq.local/api",
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "https://portal.mnbq.local:4000/api",
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "http://portal.mnbq.local:4000/api",
    });
 });
 
