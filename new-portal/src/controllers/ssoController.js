@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 // Gizli açar (real tətbiqdə environment dəyişənində saxlayın)
 const JWT_SECRET = 'app1_app2_shared_secret_key_2024';
-const APP2_URL = 'http://localhost:4000';
+const KOMEKCI_SISTEMI_API = 'http://172.22.61.7:4000/api';
 
 // SSO token yaratma
 export const generateSSOTokenForKomekciSistemi = (req, res) => {
@@ -23,7 +23,7 @@ export const generateSSOTokenForKomekciSistemi = (req, res) => {
         const token = jwt.sign(userData, JWT_SECRET);
         
         // App2-yə SSO token ilə yönləndir
-        res.redirect(`${APP2_URL}/api/sso/sso-login?sso_token=${token}`);
+        res.redirect(`${KOMEKCI_SISTEMI_API}/sso/sso-login?sso_token=${token}`);
     } catch (error) {
         console.error('SSO token yaratma xətası:', error);
         res.status(500).json({ error: 'SSO token yaradılarkən xəta baş verdi' });
