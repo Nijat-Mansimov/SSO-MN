@@ -4,7 +4,7 @@ import pool from "../db/dbConnection.js";
 import bcrypt from "bcrypt";
 
 const JWT_SECRET = 'portal_komekci_shared_secret_key_2025';
-const PORTAL_VERIFY_API = 'http://172.22.61.7:3000/api/sso/verify-token';
+const PORTAL_VERIFY_API = 'https://portal.mnbq.local/api/sso/verify-token';
 
 // SSO token yoxlama və login
 export const handleSSOLogin = async (req, res) => {
