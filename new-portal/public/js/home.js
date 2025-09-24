@@ -48,7 +48,7 @@ const newsItems = [
 // Servisləri API-dən çəkən funksiya
 async function fetchServices() {
     try {
-        const response = await fetch('http://localhost:3000/api/users/my-services');
+        const response = await fetch(`${PORTAL_API}/users/my-services`);
         if (!response.ok) {
             throw new Error('Failed to fetch services');
         }
@@ -134,7 +134,7 @@ function toggleMode() {
 
 async function fetchProfileData() {
     try {
-        const response = await fetch('http://localhost:3000/api/users/me');
+        const response = await fetch(PORTAL_API + '/users/me');
         if (!response.ok) {
             throw new Error('Failed to fetch user data');
         }
@@ -154,7 +154,7 @@ async function fetchProfileData() {
 
 async function handleLogout() {
     try {
-        const response = await fetch('http://localhost:3000/api/auth/logout', { method: 'POST' });
+        const response = await fetch(PORTAL_API + '/auth/logout', { method: 'POST' });
         if (response.ok) {
             alert('Sistemdən uğurla çıxış etdiniz.');
             window.location.reload();

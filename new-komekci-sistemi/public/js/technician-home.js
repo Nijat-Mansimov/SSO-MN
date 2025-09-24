@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:4000/api/technicians";
+const baseUrl = KOMEKCI_SISTEMI_API + "/technicians";
 
 let allTickets = [];
 let myResolvedTickets = [];
@@ -423,7 +423,7 @@ confirmCommentBtn.addEventListener('click', async () => {
 logoutBtn.addEventListener('click', async (e) => {
     e.preventDefault();
     try {
-        const res = await fetch('/api/auth/logout', { method: 'POST' });
+        const res = await fetch(KOMEKCI_SISTEMI_API + '/auth/logout', { method: 'POST' });
         if (res.ok) {
             window.location.href = '/login';
         } else {

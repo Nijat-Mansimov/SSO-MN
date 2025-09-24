@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api"
+// const BASE_URL = "http://localhost:3000/api"
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const endpoint = useLdap ? '/auth/ldap-login' : '/auth/login';
         
         try {
-            const response = await fetch(BASE_URL + endpoint, {
+            console.log(PORTAL_API)
+            const response = await fetch(PORTAL_API + endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

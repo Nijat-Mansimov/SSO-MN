@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchTickets = async () => {
         try {
-            const res = await fetch('http://localhost:4000/api/users/tickets');
+            const res = await fetch(KOMEKCI_SISTEMI_API + '/users/tickets');
             if (!res.ok) throw new Error('Biletlər yüklənərkən xəta baş verdi.');
             const { tickets } = await res.json();
             allTickets = tickets;
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(createForm).entries());
         try {
-            const res = await fetch('http://localhost:4000/api/users/create', {
+            const res = await fetch(KOMEKCI_SISTEMI_API + '/users/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!confirmDelete) return;
 
         try {
-            const res = await fetch(`http://localhost:4000/api/users/ticket/${id}`, { method: 'DELETE' });
+            const res = await fetch(`${KOMEKCI_SISTEMI_API}/users/ticket/${id}`, { method: 'DELETE' });
             if (!res.ok) throw new Error('Bilet silinərkən xəta baş verdi.');
             showPopup('Uğurlu!', 'Bilet uğurla silindi!');
             fetchTickets();
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleUpdate = async e => {
         const id = e.currentTarget.dataset.id;
         try {
-            const res = await fetch(`http://localhost:4000/api/users/tickets/${id}`);
+            const res = await fetch(`${KOMEKCI_SISTEMI_API}/users/tickets/${id}`);
             if (!res.ok) throw new Error('Bilet məlumatları tapılmadı.');
             const ticket = await res.json();
             updateTicketId.value = ticket.id;
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = updateTicketId.value;
         const data = Object.fromEntries(new FormData(updateForm).entries());
         try {
-            const res = await fetch(`http://localhost:4000/api/users/ticket/${id}`, {
+            const res = await fetch(`${KOMEKCI_SISTEMI_API}/users/ticket/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtn.addEventListener('click', async e => {
         e.preventDefault();
         try {
-            const res = await fetch('/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+            const res = await fetch(KOMEKCI_SISTEMI_API + '/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
             if (res.ok) window.location.href = '/login';
             else throw new Error('Çıxış zamanı xəta baş verdi.');
         } catch (err) {
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     profileBtn.addEventListener('click', async e => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:4000/api/users/profile/stats');
+            const res = await fetch(KOMEKCI_SISTEMI_API + '/users/profile/stats');
             if (!res.ok) throw new Error('Profil statistikaları yüklənərkən xəta baş verdi.');
             const stats = await res.json();
             totalTickets.textContent = stats.totalTickets;

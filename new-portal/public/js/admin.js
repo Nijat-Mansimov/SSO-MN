@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const notification = document.getElementById('notification');
 
-    const API_BASE_URL = 'http://localhost:3000/api/admins';
+    // const API_BASE_URL = 'http://localhost:3000/api/admins';
 
     // Global dəyişənlər
     let allUsers = [];
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Logout funksiyası
     logoutBtn.addEventListener('click', async () => {
         try {
-            await axios.post('http://localhost:3000/api/auth/logout');
+            await axios.post(PORTAL_API + '/auth/logout');
             window.location.href = '/login';
         } catch (error) {
             console.error('Logout failed:', error);
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchData = async (section) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/${section}`);
+            const response = await axios.get(`${PORTAL_API}/admins/${section}`);
             const data = response.data;
             if (section === 'users') {
                 allUsers = data;
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('Bu istifadəçini silmək istədiyinizə əminsiniz?')) {
                 const userId = e.target.dataset.id;
                 try {
-                    await axios.delete(`${API_BASE_URL}/users/${userId}`);
+                    await axios.delete(`${PORTAL_API}/admins/users/${userId}`);
                     showNotification('İstifadəçi uğurla silindi. 👍');
                     fetchData('users');
                 } catch (error) {
@@ -193,10 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             if (mode === 'create') {
-                await axios.post(`${API_BASE_URL}/users`, { ...data, password });
+                await axios.post(`${PORTAL_API}/admins/users`, { ...data, password });
                 showNotification('İstifadəçi uğurla yaradıldı. ✨');
             } else if (mode === 'update') {
-                await axios.put(`${API_BASE_URL}/users/${userId}`, data);
+                await axios.put(`${PORTAL_API}/admins/users/${userId}`, data);
                 showNotification('İstifadəçi uğurla yeniləndi. ⚙️');
             }
             modal.classList.add('hidden');
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm('Bu xidməti silmək istədiyinizə əminsiniz?')) {
             const serviceId = e.target.dataset.id;
             try {
-                await axios.delete(`${API_BASE_URL}/services/${serviceId}`);
+                await axios.delete(`${PORTAL_API}/admins/services/${serviceId}`);
                 showNotification('Xidmət uğurla silindi. 🗑️');
                 fetchData('services');
             } catch (error) {
@@ -282,10 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         if (mode === 'create') {
-            await axios.post(`${API_BASE_URL}/services`, data);
+            await axios.post(`${PORTAL_API}/admins/services`, data);
             showNotification('Xidmət uğurla yaradıldı. ➕');
         } else if (mode === 'update') {
-            await axios.put(`${API_BASE_URL}/services/${serviceId}`, data);
+            await axios.put(`${PORTAL_API}/admins/services/${serviceId}`, data);
             showNotification('Xidmət uğurla yeniləndi. ✍️');
         }
         modal.classList.add('hidden');
@@ -339,7 +339,7 @@ assignServiceForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        await axios.post(`${API_BASE_URL}/user-services/assign`, { 
+        await axios.post(`${PORTAL_API}/admins/user-services/assign`, { 
             userId: parseInt(userId, 10), // userId'ni də integer'ə çevir
             serviceIds: selectedServiceIds 
         });
@@ -361,7 +361,7 @@ assignServiceForm.addEventListener('submit', async (e) => {
                 const userId = e.target.dataset.userId;
                 const serviceId = e.target.dataset.serviceId;
                 try {
-                    await axios.post(`${API_BASE_URL}/user-services/remove`, { userId, serviceId });
+                    await axios.post(`${PORTAL_API}/admins/user-services/remove`, { userId, serviceId });
                     showNotification('Xidmət istifadəçidən uğurla silindi. ❌');
                     renderUserServicesTable();
                 } catch (error) {
@@ -377,7 +377,7 @@ assignServiceForm.addEventListener('submit', async (e) => {
         // Təqdim etdiyin kodda bu yoxdur, ona görə də fərziyyə olaraq bu endpoint-in mövcudluğunu qəbul edirəm.
         // Əgər yoxdursa, müvafiq kodu server tərəfdə əlavə etməlisiniz.
         try {
-            const userServicesResponse = await axios.get(`${API_BASE_URL}/user-services`);
+            const userServicesResponse = await axios.get(`${PORTAL_API}/admins/user-services`);
             const userServices = userServicesResponse.data;
             
             userServicesTableBody.innerHTML = '';
