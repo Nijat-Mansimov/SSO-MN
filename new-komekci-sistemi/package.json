@@ -23,6 +23,7 @@
     "mysql2": "^3.15.0",
     "nodemon": "^3.1.10",
     "passport": "^0.7.0",
+    "passport-ldapauth": "^3.0.1",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "sequelize": "^6.37.7",

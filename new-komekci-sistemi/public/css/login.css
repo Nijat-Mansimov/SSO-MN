@@ -1,184 +1,209 @@
-/* ===== Variables ===== */
-:root {
-  --bg-gradient: linear-gradient(135deg, #f0f4ff, #dbeafe);
-  --card-bg: #ffffff;
-  --text-color: #1e293b;
-  --muted-color: #6b7280;
-  --primary-color: #2563eb;
-  --primary-hover: #1d4ed8;
-  --input-border: #e2e8f0;
-  --shadow: rgba(0, 0, 0, 0.1);
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+/* --- Light Mode Variables (Default) --- */
+ :root {
+     --bg-color: #f0f2f5;
+     --card-bg: #ffffff;
+     --text-color: #333333;
+     --sub-text-color: #6c757d;
+     --border-color: #e2e6ea;
+     --input-bg: #ffffff;
+     --input-border: #ced4da;
+     --button-bg: #007bff;
+     --button-hover: #0056b3;
+     --link-color: #007bff;
+     --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
-
-body.dark-mode {
-  --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
-  --card-bg: #1e293b;
-  --text-color: #f1f5f9;
-  --muted-color: #94a3b8;
-  --input-border: #334155;
-  --shadow: rgba(0, 0, 0, 0.5);
+/* --- Dark Mode Variables --- */
+ .dark-mode {
+     --bg-color: #121212;
+     --card-bg: #1e1e1e;
+     --text-color: #e0e0e0;
+     --sub-text-color: #b0b0b0;
+     --border-color: #2a2a2a;
+     --input-bg: #2b2b2b;
+     --input-border: #444444;
+     --button-bg: #348feb;
+     --button-hover: #2977c3;
+     --link-color: #64b5f6;
+     --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
-
-/* ===== Global ===== */
-body {
-  font-family: "Inter", sans-serif;
-  background: var(--bg-gradient);
-  color: var(--text-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  transition: background 0.4s ease;
+/* --- Base Styles --- */
+ * {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
 }
-
-/* ===== Wrapper & Card ===== */
-.wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+ body {
+     font-family: 'Roboto', sans-serif;
+     background-color: var(--bg-color);
+     transition: background-color 0.4s ease;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     min-height: 100vh;
 }
-
-.login-card {
-  background: var(--card-bg);
-  padding: 50px 40px;
-  border-radius: 16px;
-  box-shadow: 0 8px 40px var(--shadow);
-  width: 400px;
-  text-align: center;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+ .login-container {
+     width: 100%;
+     max-width: 450px;
+     padding: 50px;
+     background-color: var(--card-bg);
+     border-radius: 12px;
+     box-shadow: var(--shadow);
+     text-align: center;
+     transition: background-color 0.4s ease, box-shadow 0.4s ease;
+     position: relative;
 }
-
-/* ===== Logo Section ===== */
-.logo-section {
-  margin-bottom: 30px;
+ .logo-group {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 15px;
+     margin-bottom: 30px;
 }
-
-.logo {
-  width: 70px;
-  margin-bottom: 15px;
+ .logo {
+     height: 60px;
 }
-
-h1 {
-  font-size: 26px;
-  font-weight: 700;
-  margin: 0;
-  color: var(--text-color);
+ .login-box h2 {
+     font-size: 1.6rem;
+     font-weight: 700;
+     color: var(--text-color);
+     margin-bottom: 5px;
+     transition: color 0.4s ease;
 }
-
-.subtitle {
-  font-size: 14px;
-  color: var(--muted-color);
-  margin-top: 6px;
+ .login-box p {
+     font-size: 0.9rem;
+     color: var(--sub-text-color);
+     margin-bottom: 25px;
+     transition: color 0.4s ease;
 }
-
-/* ===== Form Elements ===== */
-.input-group {
-  margin-bottom: 20px;
-  text-align: left;
+ .input-group {
+     margin-bottom: 20px;
 }
-
-.input-group label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--text-color);
+ .input-group input {
+     width: 100%;
+     padding: 15px;
+     border: 1px solid var(--input-border);
+     background-color: var(--input-bg);
+     border-radius: 8px;
+     font-size: 1rem;
+     color: var(--text-color);
+     transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
-
-.input-group input,
-.btn-primary {
-  width: 100%;
-  padding: 14px 15px;
-  border-radius: 10px;
-  font-size: 15px;
-  box-sizing: border-box;
+ .input-group input::placeholder {
+     color: var(--sub-text-color);
 }
-
-/* Input Styles */
-.input-group input {
-  border: 1px solid var(--input-border);
-  background: var(--card-bg);
-  color: var(--text-color);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+ .input-group input:focus {
+     outline: none;
+     border-color: var(--button-bg);
+     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
-
-.input-group input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+ .dark-mode .input-group input:focus {
+     box-shadow: 0 0 0 3px rgba(52, 143, 235, 0.25);
 }
-
-/* Button Styles */
-.btn-primary {
-  margin-top: 10px;
-  background: var(--primary-color);
-  color: white;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+ .options-group {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 30px;
+     font-size: 0.9rem;
+     color: var(--sub-text-color);
+     transition: color 0.4s ease;
 }
-
-.btn-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
+ .remember-me {
+     display: flex;
+     align-items: center;
 }
-
-/* ===== Error Message ===== */
-.error-message {
-  color: #ef4444;
-  margin-top: 15px;
-  font-size: 14px;
-  text-align: center;
+ .remember-me input {
+     margin-right: 8px;
+     cursor: pointer;
+     accent-color: var(--button-bg);
 }
-
-/* ===== Theme Toggle Switch ===== */
-.theme-toggle-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+ .forgot-password {
+     color: var(--link-color);
+     text-decoration: none;
+     font-weight: 500;
+     transition: color 0.4s ease;
 }
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 28px;
+ .forgot-password:hover {
+     text-decoration: underline;
 }
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+ .login-button {
+     width: 100%;
+     padding: 15px;
+     background-color: var(--button-bg);
+     color: #fff;
+     border: none;
+     border-radius: 8px;
+     font-size: 1rem;
+     font-weight: 500;
+     cursor: pointer;
+     transition: background-color 0.4s ease, transform 0.2s ease;
 }
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 28px;
+ .login-button:hover {
+     background-color: var(--button-hover);
+     transform: translateY(-2px);
 }
-
-.slider:before {
-  content: "";
-  position: absolute;
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
+ .sign-up-link {
+     margin-top: 25px;
+     font-size: 0.9rem;
+     color: var(--sub-text-color);
+     transition: color 0.4s ease;
 }
-
-input:checked + .slider {
-  background-color: var(--primary-color);
+ .sign-up-link a {
+     color: var(--link-color);
+     text-decoration: none;
+     font-weight: 500;
 }
-
-input:checked + .slider:before {
-  transform: translateX(22px);
+ .sign-up-link a:hover {
+     text-decoration: underline;
+}
+/* --- Toggle Switch Styling --- */
+ .theme-toggle-container {
+     position: absolute;
+     top: 20px;
+     right: 20px;
+}
+ .switch {
+     position: relative;
+     display: inline-block;
+     width: 48px;
+     height: 28px;
+}
+ .switch input {
+     opacity: 0;
+     width: 0;
+     height: 0;
+}
+ .slider {
+     position: absolute;
+     cursor: pointer;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: #ccc;
+     transition: 0.4s;
+}
+ .slider:before {
+     position: absolute;
+     content: "";
+     height: 20px;
+     width: 20px;
+     left: 4px;
+     bottom: 4px;
+     background-color: white;
+     transition: 0.4s;
+}
+ input:checked + .slider {
+     background-color: var(--button-bg);
+}
+ input:checked + .slider:before {
+     transform: translateX(20px);
+}
+/* Rounded sliders */
+ .slider.round {
+     border-radius: 28px;
+}
+ .slider.round:before {
+     border-radius: 50%;
 }
