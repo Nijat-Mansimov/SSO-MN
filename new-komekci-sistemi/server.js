@@ -58,7 +58,7 @@ app.use("/api/sso", ssoRoutes); // YENİ ƏLAVƏ
 
 // Pages
 app.get("/login", (req, res) => {
-  res.render("login", { PORTAL_API, KOMEKCI_SISTEMI_API });
+  res.render("login", { KOMEKCI_SISTEMI_API });
 });
 
 app.get("/user-home", isAuthenticated, (req, res) => {
