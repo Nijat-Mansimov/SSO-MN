@@ -60,7 +60,8 @@ body {
 }
 
 .logo-image {
-    height: 40px; /* Loqo ölçüsü */
+    height: 55px;
+    width: auto; /* proporsiyanı qoruyur */
 }
 
 .logo-text {
@@ -377,7 +378,8 @@ body {
 }
 
 .footer-logo {
-    height: 35px; /* Loqonun ölçüsü azaldıldı */
+    height: 50px;
+    width: auto;
 }
 
 .copyright-text, .version-text {

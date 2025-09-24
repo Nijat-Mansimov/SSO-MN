@@ -22,8 +22,8 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORTAL_API = "http://172.22.61.7:3000/api" 
-const KOMEKCI_SISTEMI_API = "http://172.22.61.7:4000/api" 
+const PORTAL_API = "https://portal.mnbq.local/api" 
+const KOMEKCI_SISTEMI_API = "https://ks.mnbq.local/api" 
 
 // Middleware
 app.use(cors());
@@ -95,5 +95,5 @@ app.use(errorHandler);
 
 const PORT = 4000;
 app.listen(PORT, () => {
-  console.log(`Server running at http://172.22.61.7:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

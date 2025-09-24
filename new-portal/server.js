@@ -46,8 +46,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", isAuthenticated, (req, res) => {
   res.render("home", { 
     user: req.user,
-    PORTAL_API: process.env.PORTAL_API || "http://172.22.61.7:3000/api",
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "http://172.22.61.7:4000/api",
+    PORTAL_API: process.env.PORTAL_API || "https://portal.mnbq.local/api",
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "https://ks.mnbq.local/api",
   });
 });
 
@@ -55,15 +55,15 @@ app.get("/", isAuthenticated, (req, res) => {
 app.get("/admin", isAdmin, (req, res) => {
   res.render("admin", { 
     user: req.user,
-    PORTAL_API: process.env.PORTAL_API || "http://172.22.61.7:3000/api",
-    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "http://172.22.61.7:4000/api",
+    PORTAL_API: process.env.PORTAL_API || "https://portal.mnbq.local/api",
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || "https://ks.mnbq.local/api",
    });
 });
 
 // Login and Register (public)
 app.get("/login", (req, res) => {
     res.render("login", {
-      PORTAL_API: process.env.PORTAL_API || "http://172.22.61.7:3000/api"
+      PORTAL_API: process.env.PORTAL_API || "https://portal.mnbq.local/api"
   });
 });
 
@@ -80,5 +80,5 @@ app.use(errorHandler);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server running at http://172.22.61.7:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
