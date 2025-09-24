@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value.trim();
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(KOMEKCI_SISTEMI_API + "/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

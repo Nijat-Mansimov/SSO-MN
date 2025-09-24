@@ -22,6 +22,9 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const PORTAL_API = "http://172.22.61.7:3000/api" 
+const KOMEKCI_SISTEMI_API = "http://172.22.61.7:4000/api" 
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -53,23 +56,38 @@ app.use("/api/sso", ssoRoutes); // YENİ ƏLAVƏ
 
 // Login and Register (public)
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login", {
+    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
+  });
 });
 
 app.get("/user-home", isAuthenticated, (req, res) => {
-  res.render("user-home");
+  res.render("user-home", {
+    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
+  });
 });
 
 app.get("/manager-home", isManager, (req, res) => {
-  res.render("manager-home");
+  res.render("manager-home", {
+    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
+  });
 });
 
 app.get("/technician-home", isTechnician, (req, res) => {
-  res.render("technician-home");
+  res.render("technician-home", {
+    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
+  });
 });
 
 app.get("/admin-home", isAdmin, (req, res) => {
-  res.render("admin-home");
+  res.render("admin-home", {
+    PORTAL_API: process.env.PORTAL_API || PORTAL_API,
+    KOMEKCI_SISTEMI_API: process.env.KOMEKCI_SISTEMI_API || KOMEKCI_SISTEMI_API,
+  });
 });
 
 // Error Handling

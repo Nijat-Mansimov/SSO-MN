@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:4000/api/admins";
+const baseUrl = KOMEKCI_SISTEMI_API + "/admins";
 
 let allTickets = [];
 let allUsers = [];
@@ -368,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Logout
     logoutBtn.addEventListener("click", async () => {
         try {
-            const response = await fetch("http://localhost:4000/api/auth/logout", {
+            const response = await fetch(KOMEKCI_SISTEMI_API + "/auth/logout", {
                 method: "POST",
                 credentials: "include"
             });
