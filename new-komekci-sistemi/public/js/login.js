@@ -1,92 +1,71 @@
-// const BASE_URL = "https://portal.mnbq.local/api"
-
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
-    const ldapLoginCheckbox = document.getElementById('ldapLogin'); // Get the new checkbox
+    const ldapLoginCheckbox = document.getElementById('ldapLogin');
 
-    // Load saved theme preference from local storage
+    // Tema seçimlərini localStorage-dan yüklə
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         body.classList.remove('light-mode', 'dark-mode');
         body.classList.add(savedTheme);
-        if (savedTheme === 'dark-mode') {
-            themeToggle.checked = true;
-        }
+        themeToggle.checked = savedTheme === 'dark-mode';
     }
 
-    // Toggle theme on button click
+    // Tema toggle
     themeToggle.addEventListener('change', () => {
-        if (themeToggle.checked) {
-            body.classList.remove('light-mode');
-            body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark-mode');
-        } else {
-            body.classList.remove('dark-mode');
-            body.classList.add('light-mode');
-            localStorage.setItem('theme', 'light-mode');
-        }
+        const newTheme = themeToggle.checked ? 'dark-mode' : 'light-mode';
+        body.classList.remove('light-mode', 'dark-mode');
+        body.classList.add(newTheme);
+        localStorage.setItem('theme', newTheme);
     });
 
-    // Form submission logic with login request
+    // Login form submit
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
-        const useLdap = ldapLoginCheckbox.checked; // Get the state of the LDAP checkbox
+        const useLdap = ldapLoginCheckbox.checked;
 
         if (!username || !password) {
             alert('Please enter both username and password.');
             return;
         }
 
-        // Determine the correct API endpoint based on the checkbox
+        // Endpoint seçimi
         const endpoint = useLdap ? '/auth/ldap-login' : '/auth/login';
-        
+        const KOMEKCI_SISTEMI_API2 = KOMEKCI_SISTEMI_API || "http://portal.mnbq.local:4000/api"
         try {
-            console.log(KOMEKCI_SISTEMI_API)
-            const response = await fetch(KOMEKCI_SISTEMI_API + endpoint, {
+            const response = await fetch(KOMEKCI_SISTEMI_API2 + endpoint, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
 
             const data = await response.json();
-            if (response.ok) {
-              // Role-based redirect
-              switch (data.user.role) {
-                case "user":
-                  window.location.href = "/user-home";
-                  break;
-                case "admin":
-                  window.location.href = "/admin-home";
-                  break;
-                case "manager":
-                  window.location.href = "/manager-home";
-                  break;
-                case "technician":
-                  window.location.href = "/technician-home";
-                  break;
-                default:
-                  window.location.href = "/home";
-              }
-            } else {
-              errorMessage.textContent = data.message || "Login failed";
-            }
+
             if (!response.ok) {
                 alert(data.error || 'Login failed.');
                 return;
             }
 
-            // Login successful
-            alert('Login successful! Welcome, ' + data.user.username);
-
-            // Optionally redirect user
-            window.location.href = '/'; // change as needed
+            // Login uğurlu oldu, roluna görə yönləndir
+            const role = data.user.role;
+            switch (role) {
+                case 'admin':
+                    window.location.href = '/admin-home';
+                    break;
+                case 'manager':
+                    window.location.href = '/manager-home';
+                    break;
+                case 'technician':
+                    window.location.href = '/technician-home';
+                    break;
+                case 'user':
+                default:
+                    window.location.href = '/user-home';
+            }
 
         } catch (err) {
             console.error('Login request failed:', err);
