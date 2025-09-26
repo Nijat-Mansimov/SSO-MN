@@ -7,4 +7,4 @@ const router = express.Router();
 router.get('/me', getMe);
 router.get("/my-services", isAuthenticated, getMyServices);
 
-export { router }; // named export
+export { router };

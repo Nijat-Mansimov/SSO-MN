@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const notification = document.getElementById('notification');
 
-    // const API_BASE_URL = 'https://portal.mnbq.local/api/admins';
+    // const API_BASE_URL = 'http://localhost:3000/api/admins';
 
     // Global dəyişənlər
     let allUsers = [];

@@ -1,4 +1,4 @@
-// const BASE_URL = "https://portal.mnbq.local/api"
+// const BASE_URL = "http://localhost:3000/api"
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');

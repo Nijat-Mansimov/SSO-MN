@@ -201,7 +201,7 @@ export const deleteService = async (req, res) => {
 // ======================= USER_SERVICES =======================
 // Xidmətə görə SSO API mapping
 const SERVICE_SSO_API = {
-  komekci_sistemi: "http://portal.mnbq.local:4000/api/sso/create/user",
+  komekci_sistemi: "http://localhost:4000/api/sso/create/user",
   salam: "http://localhost:5000/api/sso/create/user"
 };
 
