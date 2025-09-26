@@ -27,24 +27,16 @@ const __dirname = path.dirname(__filename);
 // --------------------
 // Orta qat (Middleware)
 // --------------------
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173", // Frontend domenini göstər
-  credentials: true // Cookie ilə işləmək üçün
-}));
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "default_secret", // Sessiya açarı (mütləq .env-də saxla)
+    secret: "default_secret", // Sessiya açarı (mütləq .env-də saxla)
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production", // Yalnız production-da HTTPS ilə işləsin
-      httpOnly: true, // Cookie yalnız server tərəfindən oxunsun
-      sameSite: "lax" // CSRF hücumlarına qarşı qoruma
-    }
   })
 );
 
