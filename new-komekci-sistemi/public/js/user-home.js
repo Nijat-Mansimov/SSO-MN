@@ -20,15 +20,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const createSection = document.getElementById('createSection');
     const ticketsBtn = document.getElementById('ticketsBtn');
     const createBtn = document.getElementById('createBtn');
-    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkModeToggle = document.getElementById('darkModeToggle'); // Added: Dark mode toggle element
 
     let allTickets = [];
     let currentFilter = 'all';
 
-    // Dark mode functionality
+    // --- Dark mode functionality ---
+    // 1. Check for saved preference on page load
+    const savedTheme = localStorage.getItem('theme');
+    const isDarkMode = savedTheme === 'dark';
+
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+    } else {
+        document.body.classList.remove('dark-mode');
+        darkModeToggle.checked = false;
+    }
+
+    // 2. Handle toggle change and save preference
     darkModeToggle.addEventListener('change', () => {
-        document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+        if (darkModeToggle.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark'); // Save dark mode preference
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light'); // Save light mode preference
+        }
     });
+    // --- End Dark mode functionality ---
 
     const showPopup = (title, message) => {
         popupTitle.textContent = title;
@@ -107,13 +127,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${ticket.short_description}</td>
                 <td>${ticket.status === 'uncompleted' ? 'Tamamlanmayıb' : 'Tamamlanıb'}</td>
                 <td>
-                    <button class="btn btn-update" data-id="${ticket.id}"><i class="fas fa-edit"></i></button>
+                    ${ticket.status === 'uncompleted' ? 
+                        `<button class="btn btn-update" data-id="${ticket.id}"><i class="fas fa-edit"></i></button>` :
+                        '<span style="color: var(--success-color); font-weight: 600;">Həll edildi</span>'
+                    }
                 </td>
             `;
             ticketsContainer.appendChild(tr);
         });
 
-        ticketsContainer.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', handleDelete));
+        // Note: I removed the .btn-delete listeners as there are no delete buttons in your HTML for tickets
         ticketsContainer.querySelectorAll('.btn-update').forEach(btn => btn.addEventListener('click', handleUpdate));
     };
 
@@ -150,46 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const handleDelete = async e => {
-        const id = e.currentTarget.dataset.id;
-        const confirmDelete = await new Promise(resolve => {
-            const tempPopup = document.createElement('div');
-            tempPopup.classList.add('custom-popup');
-            tempPopup.innerHTML = `
-                <div class="popup-content">
-                    <h3>Təsdiq</h3>
-                    <p>Əminsiniz ki, bu bileti silmək istəyirsiniz?</p>
-                    <div class="popup-actions" style="display: flex; gap: 10px; justify-content: flex-end;">
-                        <button class="btn btn-primary" id="confirmDeleteBtn">Sil</button>
-                        <button class="btn btn-secondary" id="cancelDeleteBtn" style="background-color: #e2e8f0; color: var(--text-color);">Ləğv et</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(tempPopup);
-            tempPopup.style.display = 'flex';
-
-            document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-                document.body.removeChild(tempPopup);
-                resolve(true);
-            });
-            document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
-                document.body.removeChild(tempPopup);
-                resolve(false);
-            });
-        });
-
-        if (!confirmDelete) return;
-
-        try {
-            const res = await fetch(`${KOMEKCI_SISTEMI_API}/users/ticket/${id}`, { method: 'DELETE' });
-            if (!res.ok) throw new Error('Bilet silinərkən xəta baş verdi.');
-            showPopup('Uğurlu!', 'Bilet uğurla silindi!');
-            fetchTickets();
-        } catch (err) {
-            console.error(err);
-            showPopup('Xəta!', err.message);
-        }
-    };
+    // Removed handleDelete since delete button is not in HTML.
 
     const handleUpdate = async e => {
         const id = e.currentTarget.dataset.id;
@@ -198,10 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error('Bilet məlumatları tapılmadı.');
             const ticket = await res.json();
             updateTicketId.value = ticket.id;
-            updateForm.update_type.value = ticket.type;
-            updateForm.update_organization.value = ticket.organization;
-            updateForm.update_short_description.value = ticket.short_description;
-            updateForm.update_description.value = ticket.description;
+            document.getElementById('update_type').value = ticket.type; // Updated to use direct ID
+            document.getElementById('update_organization').value = ticket.organization; // Updated to use direct ID
+            document.getElementById('update_short_description').value = ticket.short_description; // Updated to use direct ID
+            document.getElementById('update_description').value = ticket.description; // Updated to use direct ID
             updateModal.style.display = 'flex';
         } catch (err) {
             console.error(err);

@@ -414,7 +414,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Theme Toggle
+    // darkModeToggle.addEventListener('change', () => {
+    //     document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+    // });
+
+    // --- Dark mode functionality ---
+    // 1. Check for saved preference on page load
+    const savedTheme = localStorage.getItem('theme');
+    const isDarkMode = savedTheme === 'dark';
+
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+    } else {
+        document.body.classList.remove('dark-mode');
+        darkModeToggle.checked = false;
+    }
+
+    // 2. Handle toggle change and save preference
     darkModeToggle.addEventListener('change', () => {
-        document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+        if (darkModeToggle.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark'); // Save dark mode preference
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light'); // Save light mode preference
+        }
     });
+    // --- End Dark mode functionality ---
 });
+

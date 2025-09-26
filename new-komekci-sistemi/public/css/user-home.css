@@ -13,6 +13,7 @@
     --shadow: rgba(0,0,0,0.05);
     --radius: 8px;
     --transition: 0.2s ease-in-out;
+    --table-hover-bg: #e2e8f0; /* New variable for table hover */
 }
 
 body.dark-mode {
@@ -22,6 +23,7 @@ body.dark-mode {
     --muted-color: #a0aec0;
     --border-color: #4a5568;
     --shadow: rgba(0,0,0,0.4);
+    --table-hover-bg: #374151; /* Dark mode table hover */
 }
 
 body {
@@ -153,8 +155,8 @@ input:focus, select:focus, textarea:focus {
 body.dark-mode input,
 body.dark-mode select,
 body.dark-mode textarea {
-    background-color: #1a202c;
-    color: #e2e8f0;
+    background-color: var(--bg-color); /* Use dark mode background for inputs */
+    color: var(--text-color);
 }
 
 /* Buttons */
@@ -179,6 +181,24 @@ body.dark-mode textarea {
 
 .btn-primary:hover {
     background: var(--primary-hover);
+}
+
+.btn-secondary { /* Added style for secondary button in confirmation */
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--muted-color);
+    color: #fff;
+}
+/* Dark mode secondary button */
+body.dark-mode .btn-secondary {
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+body.dark-mode .btn-secondary:hover {
+    background-color: #64748b;
 }
 
 .btn-update, .btn-delete {
@@ -237,7 +257,7 @@ body.dark-mode textarea {
 }
 
 .tickets-table tr:hover {
-    background-color: var(--bg-color);
+    background-color: var(--table-hover-bg); /* Using new variable */
 }
 
 /* Scrollbar */
@@ -320,6 +340,7 @@ body.dark-mode textarea {
     max-width: 450px;
     box-shadow: 0 4px 15px var(--shadow);
     animation: fadeIn 0.3s ease-out;
+    position: relative; /* Added for close button positioning */
 }
 
 @keyframes fadeIn {
@@ -338,6 +359,25 @@ body.dark-mode textarea {
 
 .close-button:hover {
     color: var(--text-color);
+}
+
+/* Profile Modal adjustments for stats */
+.profile-stats p {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.profile-stats p:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.profile-stats span {
+    font-weight: 700;
+    color: var(--primary-color);
+    float: right;
 }
 
 /* Theme Toggle */
