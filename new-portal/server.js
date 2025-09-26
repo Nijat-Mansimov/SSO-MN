@@ -63,8 +63,8 @@ app.use(express.static(path.join(__dirname, "public")));
 // --------------------
 // EJS ilə qorunan səhifələr
 // --------------------
-const portalApi = process.env.PORTAL_API || "http://localhost:3000/api";
-const komekciApi = process.env.KOMEKCI_SISTEMI_API || "http://localhost:4000/api";
+const portalApi = process.env.PORTAL_API || "https://portal.mnbq.local/api";
+const komekciApi = process.env.KOMEKCI_SISTEMI_API || "http://portal.mnbq.local:4000/api";
 
 // Əsas səhifə (yalnız giriş edən istifadəçilər)
 app.get("/", isAuthenticated, (req, res) => {
