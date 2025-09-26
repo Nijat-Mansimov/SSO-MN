@@ -120,17 +120,45 @@ function applyFilters() {
     });
 }
 
-function toggleMode() {
-    body.classList.toggle('dark-mode');
+// ----------------------------------------------------------------------
+// ⚡ TƏND TEMA MƏNTİQİ: localStorage Dəstəyi Əlavə Edildi ⚡
+// ----------------------------------------------------------------------
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
     const icon = modeToggle.querySelector('i');
-    if (body.classList.contains('dark-mode')) {
+    
+    // Əgər yaddaşda 'dark' teması varsa, onu tətbiq et
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
         icon.classList.remove('fa-moon');
         icon.classList.add('fa-sun');
     } else {
+        // Əks halda (yoxdursa və ya 'light'dırsa), 'light-mode' iconunu qoru
+        body.classList.remove('dark-mode');
         icon.classList.remove('fa-sun');
         icon.classList.add('fa-moon');
     }
 }
+
+function toggleMode() {
+    body.classList.toggle('dark-mode');
+    const icon = modeToggle.querySelector('i');
+    
+    if (body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        // Vəziyyəti brauzer yaddaşında saxla
+        localStorage.setItem('theme', 'dark');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        // Vəziyyəti brauzer yaddaşında saxla
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// ----------------------------------------------------------------------
 
 async function fetchProfileData() {
     try {
@@ -157,6 +185,8 @@ async function handleLogout() {
         const response = await fetch(PORTAL_API + '/auth/logout', { method: 'POST' });
         if (response.ok) {
             alert('Sistemdən uğurla çıxış etdiniz.');
+            // Çıxış zamanı tema seçimini də silmək məsləhətdir
+            localStorage.removeItem('theme'); 
             window.location.reload();
         } else {
             alert('Çıxış uğursuz oldu. Zəhmət olmasa yenidən cəhd edin.');
@@ -180,6 +210,9 @@ function showNews() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Səhifə yüklənəndə brauzerin yaddaşındakı tema vəziyyətini yüklə
+    loadTheme(); 
+    
     fetchServices();
     showRandomSecurityTip();
     showNews();
@@ -205,6 +238,7 @@ logoutButton.addEventListener('click', handleLogout);
 adminDashboardButton.addEventListener('click', () => {
     window.location.href = 'admin';
 });
+
 
 closeTipsButton.addEventListener('click', () => {
     securityTipsContainer.classList.add('hidden');
